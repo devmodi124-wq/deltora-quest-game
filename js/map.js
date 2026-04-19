@@ -74,13 +74,22 @@ export function initMap(gameState) {
   });
 
   newEnterBtn.addEventListener('click', () => {
-    const dataId = MAP_TO_DATA[currentRegionId];
-    if (dataId && _onEnterRegion) {
-      closePopup();
+    try {
+      console.log('[ENTER REGION] clicked', {
+        currentRegionId,
+        dataId: MAP_TO_DATA[currentRegionId],
+        hasOnEnterRegion: typeof _onEnterRegion,
+      });
+      const dataId = MAP_TO_DATA[currentRegionId];
+      if (!dataId) { console.error('[ENTER] no dataId for', currentRegionId); return; }
+      if (!_onEnterRegion) { console.error('[ENTER] _onEnterRegion not set'); return; }
       const regionData = regions.find(r => r.id === dataId);
-      if (regionData) {
-        _onEnterRegion(regionData);
-      }
+      if (!regionData) { console.error('[ENTER] no regionData for', dataId); return; }
+      closePopup();
+      _onEnterRegion(regionData);
+    } catch (err) {
+      console.error('[ENTER REGION] threw:', err);
+      alert('Enter Region error: ' + err.message);
     }
   });
 
