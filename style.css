@@ -3595,9 +3595,11 @@ body {
 .valley-cutscene-line {
   font-family: var(--font-lore);
   font-style: italic;
-  font-size: var(--text-lore-lg);
-  line-height: 2.0;
+  font-size: 2.1rem;          /* ≈ 21px — cutscene text needs more weight */
+  line-height: 1.8;
   letter-spacing: 0.02em;
+  color: #e8d5f0;             /* brighter lilac, higher contrast on black */
+  opacity: 1;
 }
 
 /* ───────────── MEMORY ENGINE (City of the Rats) ───────────── */
