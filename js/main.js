@@ -39,19 +39,26 @@ let isTransitioning = false;
 
 function showScreen(id, direction = 'fade') {
   const target = document.getElementById(`screen-${id}`);
-  if (!target) return;
+  if (!target) { console.error('[showScreen] no target for', id); return; }
 
   const current = document.querySelector('.screen:not(.hidden)');
-  if (current === target) return;
+  console.log('[showScreen]', { id, direction, currentId: current?.id, targetId: target.id });
+  if (current === target) { console.warn('[showScreen] current===target, skip', id); return; }
 
   const enter = () => {
     target.classList.remove('hidden');
-    // Force reflow then animate in
     void target.offsetWidth;
     target.classList.add(`screen-enter-${direction}`);
-    target.addEventListener('animationend', () => {
+    const done = () => {
       target.classList.remove(`screen-enter-${direction}`);
       isTransitioning = false;
+      console.log('[showScreen] enter complete:', id);
+    };
+    // Fallback: if animationend never fires, complete after 600ms
+    const fallback = setTimeout(done, 600);
+    target.addEventListener('animationend', () => {
+      clearTimeout(fallback);
+      done();
     }, { once: true });
   };
 
@@ -62,10 +69,16 @@ function showScreen(id, direction = 'fade') {
 
   isTransitioning = true;
   current.classList.add(`screen-exit-${direction}`);
-  current.addEventListener('animationend', () => {
+  const exited = () => {
     current.classList.remove(`screen-exit-${direction}`);
     current.classList.add('hidden');
+    console.log('[showScreen] exit complete:', current.id);
     enter();
+  };
+  const exitFallback = setTimeout(exited, 500);
+  current.addEventListener('animationend', () => {
+    clearTimeout(exitFallback);
+    exited();
   }, { once: true });
 }
 
