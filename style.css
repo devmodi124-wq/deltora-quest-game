@@ -70,7 +70,13 @@ body {
   justify-content: center;
 }
 
-.hidden {
+.hidden,
+#screen-boot.hidden,
+#screen-mode.hidden,
+#screen-map.hidden,
+#screen-region.hidden,
+#screen-game.hidden,
+#screen-end.hidden {
   display: none !important;
 }
 
