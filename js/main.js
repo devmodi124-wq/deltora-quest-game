@@ -246,6 +246,7 @@ const REGION_ENGINES = {
 let activeMaze = null;
 
 function showRegionIntro(regionData) {
+  console.log('[showRegionIntro] called with', regionData.id, regionData.name);
   const screen = document.getElementById('screen-region');
   const introText = gameState.mode === 'fan'
     ? regionData.introFan
@@ -286,6 +287,34 @@ function showRegionIntro(regionData) {
   });
 
   showScreen('region', 'up');
+
+  // Diagnostic: log computed state of screen-region after transition settles
+  setTimeout(() => {
+    const s = document.getElementById('screen-region');
+    const cs = getComputedStyle(s);
+    const rect = s.getBoundingClientRect();
+    const name = s.querySelector('.region-intro-name').textContent;
+    const text = s.querySelector('.region-intro-text').textContent.slice(0, 60);
+    console.log('[region DIAG]', {
+      classList: s.className,
+      display: cs.display,
+      opacity: cs.opacity,
+      visibility: cs.visibility,
+      zIndex: cs.zIndex,
+      position: cs.position,
+      width: rect.width,
+      height: rect.height,
+      top: rect.top,
+      left: rect.left,
+      name,
+      textStart: text,
+    });
+    // Also log what OTHER screens look like
+    document.querySelectorAll('.screen').forEach(sc => {
+      const c = getComputedStyle(sc);
+      console.log('  [screen]', sc.id, 'display:', c.display, 'classes:', sc.className);
+    });
+  }, 1200);
 }
 
 function launchMaze(regionData) {
