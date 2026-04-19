@@ -18,12 +18,12 @@
   --text-ui:         1.05rem;  /* 10.5px — buttons, HUD */
   --text-micro:      0.9rem;   /* 9px — belt labels, tooltips */
 
-  /* Type scale — lore (translated so lore-lg ≈ 20px) */
-  --text-lore-xl:    2.4rem;   /* 24px — Guardian riddle */
-  --text-lore-lg:    2.0rem;   /* 20px — dialogue, intro body */
-  --text-lore-md:    1.75rem;  /* 17.5px — flavour, descriptions */
-  --text-lore-sm:    1.5rem;   /* 15px — hints, explorer notes */
-  --text-lore-xs:    1.35rem;  /* 13.5px — card desc, tooltips */
+  /* Type scale — lore */
+  --text-lore-xl:    1.9rem;   /* 19px — Guardian riddle */
+  --text-lore-lg:    1.65rem;  /* 16.5px — dialogue, intro body */
+  --text-lore-md:    1.45rem;  /* 14.5px — flavour, descriptions */
+  --text-lore-sm:    1.25rem;  /* 12.5px — hints, explorer notes */
+  --text-lore-xs:    1.1rem;   /* 11px — card desc, tooltips */
 
   /* Line heights */
   --lh-pixel:  2.0;
@@ -1475,9 +1475,9 @@ body {
 
 .dialogue-portrait {
   position: relative;
-  width: 200px;
-  min-width: 200px;
-  height: 260px;
+  width: 160px;
+  min-width: 160px;
+  height: 210px;
   border-radius: 8px;
   overflow: hidden;
   border: 1px solid var(--lake-blue);
@@ -2123,9 +2123,9 @@ body {
 
 .riddle-portrait {
   position: relative;
-  width: 200px;
-  min-width: 200px;
-  height: 260px;
+  width: 160px;
+  min-width: 160px;
+  height: 210px;
   border-radius: 8px;
   overflow: hidden;
   border: 1px solid var(--accent);
@@ -3496,20 +3496,21 @@ body {
 /* ───────────── DIALOGUE ENGINE (Lake of Tears) ───────────── */
 
 .dialogue-box {
-  padding: 28px 32px;
+  padding: 20px 24px;
+  min-height: 0 !important;
 }
 
 .dialogue-speaker {
   font-family: var(--font-pixel);
   font-size: var(--text-micro);
   letter-spacing: 0.08em;
-  margin-bottom: 14px;
+  margin-bottom: 10px;
 }
 
 .dialogue-text {
   font-family: var(--font-lore);
   font-size: var(--text-lore-lg);
-  line-height: var(--lh-lore);
+  line-height: 1.65;
   color: var(--text-lore);
 }
 
@@ -3524,9 +3525,9 @@ body {
 .dialogue-choice {
   font-family: var(--font-lore);
   font-size: var(--text-lore-sm);
-  line-height: var(--lh-lore);
-  padding: 18px 24px;
-  min-height: 64px;
+  line-height: 1.5;
+  padding: 12px 18px;
+  min-height: 48px;
   letter-spacing: 0.01em;
 }
 
@@ -3540,36 +3541,37 @@ body {
 /* ───────────── RIDDLE ENGINE ───────────── */
 
 .riddle-box {
-  padding: 32px 36px;
+  padding: 20px 24px;
+  min-height: 0 !important;
 }
 
 .riddle-speaker {
   font-family: var(--font-pixel);
   font-size: var(--text-micro);
   letter-spacing: 0.08em;
-  margin-bottom: 14px;
+  margin-bottom: 10px;
 }
 
 .riddle-text {
   font-family: var(--font-lore);
   font-size: var(--text-lore-xl);
-  line-height: 1.9;
+  line-height: 1.65;
   color: var(--text-lore);
   max-width: 640px;
   white-space: pre-line;
 }
 
 [data-region="valley"] .riddle-text {
-  font-size: 2.7rem;          /* ≈ 27px */
-  line-height: 2.0;
+  font-size: var(--text-lore-xl);
+  line-height: 1.7;
 }
 
 .riddle-answer {
   font-family: var(--font-lore);
   font-size: var(--text-lore-md);
-  line-height: var(--lh-lore);
-  padding: 18px 24px;
-  min-height: 64px;
+  line-height: 1.5;
+  padding: 12px 18px;
+  min-height: 48px;
   letter-spacing: 0.01em;
   text-align: center;
 }
