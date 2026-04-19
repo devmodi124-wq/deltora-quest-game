@@ -554,7 +554,8 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 1.5rem;
+  padding: 1rem 1.5rem 2rem;
+  gap: 0.8rem;
   position: relative;
 }
 
@@ -722,16 +723,21 @@ body {
 /* ───────────── BEAST REGION THEME ───────────── */
 
 [data-region="beast"] .maze-wall {
-  background: #1a0a2a;
-  box-shadow: inset 0 0 6px rgba(26, 0, 48, 0.9);
+  background: #3a1e5c;
+  box-shadow: inset 0 0 6px rgba(60, 20, 100, 0.8);
 }
 
 [data-region="beast"] .maze-path {
-  background: #151020;
+  background: #251838;
+  box-shadow: inset 0 0 2px rgba(80, 40, 120, 0.25);
 }
 
 [data-region="beast"] .maze-obstacle {
-  background: #0a1a1a;
+  background: #1a1228;
+}
+
+[data-region="beast"] .maze-vignette {
+  background: radial-gradient(ellipse at 50% 50%, transparent 55%, rgba(0, 0, 0, 0.35) 100%);
 }
 
 /* Pipe obstacle — water shimmer */
