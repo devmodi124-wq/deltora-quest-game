@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Belt of Deltora</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=IM+Fell+English:ital@0;1&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- SCREEN 1: BOOT -->
+  <div id="screen-boot" class="screen">
+    <div class="boot-content">
+      <h1 class="boot-title">THE BELT OF DELTORA</h1>
+      <p class="boot-subtitle">A quest to restore what was broken</p>
+
+      <div class="belt-slots boot-belt">
+        <div class="gem-slot" data-gem="topaz" style="--accent: var(--forest-green)">
+          <div class="gem-inner"></div>
+        </div>
+        <div class="gem-slot" data-gem="ruby" style="--accent: var(--lake-blue)">
+          <div class="gem-inner"></div>
+        </div>
+        <div class="gem-slot" data-gem="opal" style="--accent: var(--rat-grey)">
+          <div class="gem-inner"></div>
+        </div>
+        <div class="gem-slot" data-gem="lapis-lazuli" style="--accent: var(--sands-amber)">
+          <div class="gem-inner"></div>
+        </div>
+        <div class="gem-slot" data-gem="emerald" style="--accent: var(--mountain-teal)">
+          <div class="gem-inner"></div>
+        </div>
+        <div class="gem-slot" data-gem="amethyst" style="--accent: var(--beast-purple)">
+          <div class="gem-inner"></div>
+        </div>
+        <div class="gem-slot" data-gem="diamond" style="--accent: var(--valley-violet)">
+          <div class="gem-inner"></div>
+        </div>
+      </div>
+
+      <p class="blink-prompt">PRESS ENTER or TAP TO BEGIN</p>
+    </div>
+  </div>
+
+  <!-- SCREEN 2: MODE SELECT -->
+  <div id="screen-mode" class="screen hidden">
+    <div class="mode-content">
+      <h2 class="mode-heading">CHOOSE YOUR PATH</h2>
+
+      <button class="mode-btn" data-mode="fan">
+        <span class="mode-icon">&#9876; FAN MODE</span>
+        <span class="mode-sub">I know the Belt. Test my knowledge.</span>
+      </button>
+
+      <button class="mode-btn" data-mode="explorer">
+        <span class="mode-icon">&#128506; EXPLORER MODE</span>
+        <span class="mode-sub">Tell me about Deltora. I am new to this world.</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- SCREEN 3: MAP -->
+  <div id="screen-map" class="screen hidden">
+
+    <button id="settings-gear" class="settings-gear" aria-label="Settings">&#9881;</button>
+
+    <!-- Belt Progress Bar -->
+    <div id="belt-progress" class="belt-progress">
+      <div class="belt-slot" data-gem="diamond">
+        <div class="belt-gem" style="--accent: var(--valley-violet)">
+          <div class="gem-inner"></div>
+        </div>
+        <span class="belt-gem-label">Diamond</span>
+      </div>
+      <div class="belt-slot" data-gem="emerald">
+        <div class="belt-gem" style="--accent: var(--mountain-teal)">
+          <div class="gem-inner"></div>
+        </div>
+        <span class="belt-gem-label">Emerald</span>
+      </div>
+      <div class="belt-slot" data-gem="lapis-lazuli">
+        <div class="belt-gem" style="--accent: var(--sands-amber)">
+          <div class="gem-inner"></div>
+        </div>
+        <span class="belt-gem-label">Lapis Lazuli</span>
+      </div>
+      <div class="belt-slot" data-gem="topaz">
+        <div class="belt-gem" style="--accent: var(--forest-green)">
+          <div class="gem-inner"></div>
+        </div>
+        <span class="belt-gem-label">Topaz</span>
+      </div>
+      <div class="belt-slot" data-gem="opal">
+        <div class="belt-gem" style="--accent: var(--rat-grey)">
+          <div class="gem-inner"></div>
+        </div>
+        <span class="belt-gem-label">Opal</span>
+      </div>
+      <div class="belt-slot" data-gem="ruby">
+        <div class="belt-gem" style="--accent: var(--lake-blue)">
+          <div class="gem-inner"></div>
+        </div>
+        <span class="belt-gem-label">Ruby</span>
+      </div>
+      <div class="belt-slot" data-gem="amethyst">
+        <div class="belt-gem" style="--accent: var(--beast-purple)">
+          <div class="gem-inner"></div>
+        </div>
+        <span class="belt-gem-label">Amethyst</span>
+      </div>
+    </div>
+
+    <!-- Map Area -->
+    <div id="map-container" class="map-container">
+      <div id="map-wrapper">
+
+        <svg id="map-svg" viewBox="0 0 860 680" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+          <defs>
+            <pattern id="map-grid" width="40" height="40" patternUnits="userSpaceOnUse">
+              <path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(180,140,60,0.04)" stroke-width="1"/>
+            </pattern>
+            <clipPath id="island-clip">
+              <polygon points="69,27 241,7 447,0 636,14 774,41 834,109 851,204 841,313 825,408 791,490 739,565 653,619 533,660 413,673 292,660 172,619 86,558 34,463 9,354 17,245 34,136"/>
+            </clipPath>
+          </defs>
+
+          <!-- Island fill -->
+          <polygon
+            points="69,27 241,7 447,0 636,14 774,41 834,109 851,204 841,313 825,408 791,490 739,565 653,619 533,660 413,673 292,660 172,619 86,558 34,463 9,354 17,245 34,136"
+            fill="#1a1208"
+            stroke="#2a1e0a"
+            stroke-width="2"
+          />
+
+          <!-- Grid texture clipped inside island -->
+          <rect width="860" height="680" fill="url(#map-grid)" clip-path="url(#island-clip)"/>
+
+          <!-- Inner shadow -->
+          <polygon
+            points="69,27 241,7 447,0 636,14 774,41 834,109 851,204 841,313 825,408 791,490 739,565 653,619 533,660 413,673 292,660 172,619 86,558 34,463 9,354 17,245 34,136"
+            fill="none"
+            stroke="rgba(0,0,0,0.4)"
+            stroke-width="20"
+            clip-path="url(#island-clip)"
+          />
+
+          <!-- DELTORA watermark -->
+          <text x="430" y="110" text-anchor="middle"
+                font-family="'Press Start 2P', monospace"
+                font-size="14"
+                fill="rgba(245,200,66,0.2)"
+                letter-spacing="8">DELTORA</text>
+        </svg>
+
+        <!-- Region markers — positioned via CSS -->
+        <button class="region-marker" data-region="forests-of-silence"
+                style="--accent: var(--forest-green); top: 74%; left: 50%;"
+                aria-label="Forests of Silence">
+          <span class="marker-dot"></span>
+          <span class="marker-tooltip">Forests of Silence</span>
+        </button>
+
+        <button class="region-marker" data-region="lake-of-tears"
+                style="--accent: var(--lake-blue); top: 44%; left: 72%;"
+                aria-label="Lake of Tears">
+          <span class="marker-dot"></span>
+          <span class="marker-tooltip">Lake of Tears</span>
+        </button>
+
+        <button class="region-marker" data-region="city-of-the-rats"
+                style="--accent: var(--rat-grey); top: 50%; left: 48%;"
+                aria-label="City of the Rats">
+          <span class="marker-dot"></span>
+          <span class="marker-tooltip">City of the Rats</span>
+        </button>
+
+        <button class="region-marker" data-region="shifting-sands"
+                style="--accent: var(--sands-amber); top: 32%; left: 68%;"
+                aria-label="Shifting Sands">
+          <span class="marker-dot"></span>
+          <span class="marker-tooltip">Shifting Sands</span>
+        </button>
+
+        <button class="region-marker" data-region="dread-mountain"
+                style="--accent: var(--mountain-teal); top: 18%; left: 28%;"
+                aria-label="Dread Mountain">
+          <span class="marker-dot"></span>
+          <span class="marker-tooltip">Dread Mountain</span>
+        </button>
+
+        <button class="region-marker" data-region="maze-of-the-beast"
+                style="--accent: var(--beast-purple); top: 54%; left: 28%;"
+                aria-label="Maze of the Beast">
+          <span class="marker-dot"></span>
+          <span class="marker-tooltip">Maze of the Beast</span>
+        </button>
+
+        <button class="region-marker" data-region="valley-of-the-lost"
+                style="--accent: var(--valley-violet); top: 44%; left: 40%;"
+                aria-label="Valley of the Lost">
+          <span class="marker-dot"></span>
+          <span class="marker-tooltip">Valley of the Lost</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Region Info Popup -->
+    <div id="region-popup" class="region-popup hidden">
+      <button class="popup-close" aria-label="Close">&times;</button>
+      <h3 class="popup-region-name"></h3>
+      <p class="popup-gem-name"></p>
+      <p class="popup-status"></p>
+      <button class="popup-enter-btn">ENTER REGION</button>
+    </div>
+
+  </div>
+
+  <!-- SCREEN 4: REGION INTRO -->
+  <div id="screen-region" class="screen hidden">
+    <div class="region-intro-content">
+      <button id="region-back-btn" class="region-back-btn">&larr; MAP</button>
+      <h2 class="region-intro-name"></h2>
+      <p class="region-intro-text"></p>
+      <p class="region-intro-gem"></p>
+      <button class="region-intro-enter"></button>
+    </div>
+  </div>
+
+  <!-- SCREEN 5: GAME (maze / engine) -->
+  <div id="screen-game" class="screen hidden">
+    <div id="game-container" class="game-container"></div>
+  </div>
+
+  <!-- SCREEN 6: END -->
+  <div id="screen-end" class="screen hidden">
+    <div class="end-content">
+      <div class="end-belt">
+        <div class="end-belt-slots"></div>
+      </div>
+      <div class="end-lines"></div>
+      <button class="end-restart-btn hidden">Begin Again</button>
+    </div>
+  </div>
+
+  <!-- Loading overlay -->
+  <div id="loading-overlay" class="loading-overlay hidden">
+    <span class="loading-text">Entering...</span>
+  </div>
+
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>

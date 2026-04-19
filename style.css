@@ -1,0 +1,4284 @@
+/* ───────────── ROOT VARIABLES ───────────── */
+
+:root {
+  --bg-dark:        #0d0d0d;
+  --text-light:     #e8d5a3;
+  --text-lore:      #f0e0b0;
+  --gold:           #f5c842;
+  --border-dim:     #3a3220;
+
+  /* Font stacks */
+  --font-pixel:     'Press Start 2P', monospace;
+  --font-lore:      'IM Fell English', Georgia, serif;
+
+  /* Type scale — pixel (spec values translated to 10px root) */
+  --text-title:      3.2rem;   /* 32px — game title */
+  --text-heading:    1.8rem;   /* 18px — screen / region names */
+  --text-subheading: 1.3rem;   /* 13px — gem names, mode labels */
+  --text-ui:         1.05rem;  /* 10.5px — buttons, HUD */
+  --text-micro:      0.9rem;   /* 9px — belt labels, tooltips */
+
+  /* Type scale — lore (translated so lore-lg ≈ 20px) */
+  --text-lore-xl:    2.4rem;   /* 24px — Guardian riddle */
+  --text-lore-lg:    2.0rem;   /* 20px — dialogue, intro body */
+  --text-lore-md:    1.75rem;  /* 17.5px — flavour, descriptions */
+  --text-lore-sm:    1.5rem;   /* 15px — hints, explorer notes */
+  --text-lore-xs:    1.35rem;  /* 13.5px — card desc, tooltips */
+
+  /* Line heights */
+  --lh-pixel:  2.0;
+  --lh-lore:   1.75;
+  --lh-tight:  1.4;
+
+  --forest-green:   #2d5a27;
+  --lake-blue:      #1a3a5c;
+  --rat-grey:       #4a4035;
+  --sands-amber:    #c4862a;
+  --mountain-teal:  #1a4a3a;
+  --beast-purple:   #2d1a4a;
+  --valley-violet:  #4a1a5c;
+}
+
+/* ───────────── RESET & BASE ───────────── */
+
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 10px;
+}
+
+body {
+  font-family: var(--font-pixel);
+  background: var(--bg-dark);
+  color: var(--text-light);
+  line-height: 1.8;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ───────────── SCREEN SYSTEM ───────────── */
+
+.screen {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.hidden {
+  display: none !important;
+}
+
+/* ───────────── BOOT SCREEN ───────────── */
+
+.boot-content {
+  text-align: center;
+  padding: 2rem;
+}
+
+.boot-title {
+  font-size: 3.2em;
+  color: var(--gold);
+  text-shadow: 0 0 20px rgba(245, 200, 66, 0.4);
+  margin-bottom: 1.6rem;
+  letter-spacing: 0.05em;
+}
+
+.boot-subtitle {
+  font-size: 1.2em;
+  color: var(--text-light);
+  opacity: 0.7;
+  margin-bottom: 4rem;
+}
+
+/* Belt slots (shared between boot and map) */
+
+.belt-slots {
+  display: flex;
+  justify-content: center;
+  gap: 1.6rem;
+  margin-bottom: 4rem;
+}
+
+.gem-slot {
+  width: 36px;
+  height: 36px;
+  border: 2px solid var(--accent, var(--border-dim));
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  transition: box-shadow 0.4s, background 0.4s;
+}
+
+.gem-slot .gem-inner {
+  width: 20px;
+  height: 20px;
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.gem-slot.collected {
+  background: var(--accent);
+  box-shadow: 0 0 12px var(--accent), 0 0 24px var(--accent);
+}
+
+.gem-slot.collected .gem-inner {
+  background: rgba(255, 255, 255, 0.35);
+}
+
+/* Blinking prompt */
+
+.blink-prompt {
+  font-size: 1.1em;
+  color: var(--gold);
+  animation: blink 1.2s step-end infinite;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0; }
+}
+
+/* ───────────── MODE SELECT SCREEN ───────────── */
+
+.mode-content {
+  text-align: center;
+  padding: 2rem;
+  max-width: 500px;
+  width: 100%;
+}
+
+.mode-heading {
+  font-size: 2.4em;
+  color: var(--gold);
+  margin-bottom: 4rem;
+}
+
+.mode-btn {
+  display: block;
+  width: 100%;
+  background: rgba(255, 255, 255, 0.03);
+  border: 2px solid var(--border-dim);
+  border-radius: 8px;
+  padding: 2.4rem 2rem;
+  margin-bottom: 2rem;
+  cursor: pointer;
+  text-align: center;
+  transition: border-color 0.3s, box-shadow 0.3s, background 0.3s;
+  font-family: inherit;
+}
+
+.mode-btn:hover,
+.mode-btn:focus-visible {
+  border-color: var(--gold);
+  box-shadow: 0 0 16px rgba(245, 200, 66, 0.2);
+  background: rgba(245, 200, 66, 0.05);
+  outline: none;
+}
+
+.mode-icon {
+  display: block;
+  font-size: 1.6em;
+  color: var(--gold);
+  margin-bottom: 1rem;
+}
+
+.mode-sub {
+  display: block;
+  font-size: 0.9em;
+  color: var(--text-light);
+  opacity: 0.65;
+  line-height: 2;
+}
+
+/* ───────────── MAP SCREEN ───────────── */
+
+#screen-map {
+  justify-content: flex-start;
+  padding-top: 0;
+}
+
+/* Belt progress bar */
+
+.belt-progress {
+  display: flex;
+  justify-content: center;
+  gap: 1.2rem;
+  padding: 1.6rem 1rem;
+  background: rgba(0, 0, 0, 0.6);
+  border-bottom: 1px solid var(--border-dim);
+  width: 100%;
+  flex-shrink: 0;
+}
+
+.belt-slot {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.belt-gem {
+  width: 32px;
+  height: 32px;
+  border: 2px solid var(--accent, var(--border-dim));
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  transition: box-shadow 0.4s, background 0.4s;
+}
+
+.belt-gem .gem-inner {
+  width: 18px;
+  height: 18px;
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.belt-gem.collected {
+  background: var(--accent);
+  box-shadow: 0 0 10px var(--accent), 0 0 20px var(--accent);
+}
+
+.belt-gem.collected .gem-inner {
+  background: rgba(255, 255, 255, 0.35);
+}
+
+.belt-gem-label {
+  font-size: 0.6em;
+  color: var(--text-light);
+  opacity: 0.5;
+  white-space: nowrap;
+}
+
+/* Map container */
+
+.map-container {
+  flex: 1;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.map-land {
+  position: relative;
+  width: 100%;
+  max-width: 800px;
+  aspect-ratio: 4 / 3;
+  background:
+    radial-gradient(ellipse at 30% 40%, rgba(45, 90, 39, 0.15) 0%, transparent 50%),
+    radial-gradient(ellipse at 70% 30%, rgba(26, 58, 92, 0.12) 0%, transparent 40%),
+    radial-gradient(ellipse at 50% 70%, rgba(74, 64, 53, 0.1) 0%, transparent 45%),
+    linear-gradient(160deg, #111008 0%, #1a1610 40%, #0f0d08 100%);
+  border: 2px solid var(--border-dim);
+  border-radius: 8px;
+  box-shadow: inset 0 0 60px rgba(0, 0, 0, 0.5);
+  overflow: visible;
+}
+
+/* Pixel grid overlay for map texture */
+.map-land::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(232, 213, 163, 0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(232, 213, 163, 0.02) 1px, transparent 1px);
+  background-size: 8px 8px;
+  border-radius: 6px;
+  pointer-events: none;
+}
+
+/* Map label */
+.map-land::after {
+  content: 'DELTORA';
+  position: absolute;
+  top: 4%;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 1.8em;
+  color: var(--gold);
+  opacity: 0.15;
+  letter-spacing: 0.3em;
+  pointer-events: none;
+}
+
+/* Region markers */
+
+.region-marker {
+  position: absolute;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 12px;
+  z-index: 2;
+  font-family: inherit;
+}
+
+.marker-dot {
+  display: block;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 8px var(--accent), 0 0 16px var(--accent);
+  transition: transform 0.2s, box-shadow 0.2s;
+  animation: pulse-glow 2.5s ease-in-out infinite;
+}
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 8px var(--accent), 0 0 16px var(--accent); }
+  50%      { box-shadow: 0 0 12px var(--accent), 0 0 28px var(--accent); }
+}
+
+.region-marker:hover .marker-dot,
+.region-marker:focus-visible .marker-dot {
+  transform: scale(1.4);
+  box-shadow: 0 0 14px var(--accent), 0 0 32px var(--accent);
+}
+
+/* Tooltip on hover */
+
+.marker-tooltip {
+  position: absolute;
+  bottom: calc(100% + 4px);
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  font-size: 0.8em;
+  color: var(--text-light);
+  background: rgba(13, 13, 13, 0.92);
+  border: 1px solid var(--border-dim);
+  border-radius: 4px;
+  padding: 0.4em 0.8em;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.region-marker:hover .marker-tooltip,
+.region-marker:focus-visible .marker-tooltip {
+  opacity: 1;
+}
+
+/* ───────────── REGION POPUP ───────────── */
+
+.region-popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #141210;
+  border: 2px solid var(--gold);
+  border-radius: 8px;
+  padding: 3rem 3.2rem;
+  text-align: center;
+  z-index: 100;
+  min-width: 300px;
+  box-shadow: 0 0 40px rgba(0, 0, 0, 0.8), 0 0 12px rgba(245, 200, 66, 0.15);
+}
+
+.popup-close {
+  position: absolute;
+  top: 0.8rem;
+  right: 1rem;
+  background: none;
+  border: none;
+  color: var(--text-light);
+  font-size: 2em;
+  cursor: pointer;
+  font-family: inherit;
+  line-height: 1;
+  opacity: 0.6;
+  transition: opacity 0.2s;
+}
+
+.popup-close:hover {
+  opacity: 1;
+}
+
+.popup-region-name {
+  font-size: 1.4em;
+  color: var(--gold);
+  margin-bottom: 1.2rem;
+}
+
+.popup-gem-name {
+  font-size: 1em;
+  color: var(--text-light);
+  margin-bottom: 0.8rem;
+}
+
+.popup-status {
+  font-size: 0.85em;
+  opacity: 0.65;
+  margin-bottom: 2rem;
+}
+
+.popup-enter-btn {
+  font-family: inherit;
+  font-size: 1em;
+  color: var(--bg-dark);
+  background: var(--gold);
+  border: none;
+  border-radius: 4px;
+  padding: 1rem 2rem;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.popup-enter-btn:hover {
+  opacity: 0.85;
+}
+
+/* Popup backdrop */
+.region-popup-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 99;
+}
+
+/* ───────────── VISITED MARKERS ───────────── */
+
+.region-marker.visited .marker-dot {
+  position: relative;
+}
+
+.region-marker.visited .marker-dot::after {
+  content: '\2713';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 10px;
+  color: var(--text-light);
+  font-family: 'Press Start 2P', monospace;
+}
+
+/* ───────────── REGION INTRO SCREEN ───────────── */
+
+.region-intro-content {
+  text-align: center;
+  padding: 3rem 2rem;
+  max-width: 600px;
+  width: 100%;
+  position: relative;
+}
+
+.region-back-btn {
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: none;
+  border: 1px solid var(--border-dim);
+  border-radius: 4px;
+  color: var(--text-light);
+  font-family: inherit;
+  font-size: 0.8em;
+  padding: 0.5em 1em;
+  cursor: pointer;
+  opacity: 0.6;
+  transition: opacity 0.2s;
+}
+
+.region-back-btn:hover {
+  opacity: 1;
+}
+
+.region-intro-name {
+  font-size: 2.2em;
+  margin-bottom: 2.4rem;
+}
+
+.region-intro-text {
+  font-size: 0.9em;
+  line-height: 2.2;
+  margin-bottom: 2rem;
+  opacity: 0.8;
+  white-space: pre-line;
+}
+
+.region-intro-gem {
+  font-size: 0.75em;
+  line-height: 2;
+  opacity: 0.55;
+  margin-bottom: 3rem;
+  font-style: italic;
+}
+
+.region-intro-enter {
+  font-family: inherit;
+  font-size: 1.1em;
+  color: var(--bg-dark);
+  background: var(--gold);
+  border: none;
+  border-radius: 4px;
+  padding: 1.2rem 2.4rem;
+  cursor: pointer;
+  transition: opacity 0.2s, box-shadow 0.3s;
+}
+
+.region-intro-enter:hover {
+  opacity: 0.85;
+  box-shadow: 0 0 16px rgba(245, 200, 66, 0.3);
+}
+
+/* ───────────── GAME / MAZE SCREEN ───────────── */
+
+#screen-game {
+  justify-content: flex-start;
+  padding: 0;
+}
+
+.game-container {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1.5rem;
+  position: relative;
+}
+
+/* Maze HUD */
+
+.maze-hud {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  max-width: calc(var(--maze-cols, 13) * 40px);
+  padding: 1rem 0;
+  margin-bottom: 1rem;
+}
+
+.maze-hud-region {
+  font-size: 1em;
+  color: var(--gold);
+}
+
+.maze-hud-goal {
+  font-size: 0.8em;
+  color: var(--text-light);
+  opacity: 0.65;
+}
+
+/* Maze Grid */
+
+.maze-grid {
+  display: grid;
+  gap: 0;
+  position: relative;
+  border: 2px solid var(--border-dim);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.maze-tile {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  user-select: none;
+}
+
+.maze-wall {
+  background: #0a0a08;
+  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.8);
+}
+
+.maze-path {
+  background: #1a1810;
+}
+
+.maze-obstacle {
+  background: #12100c;
+  color: var(--accent, var(--forest-green));
+  font-size: 18px;
+  opacity: 0.7;
+}
+
+.maze-obstacle.maze-hint {
+  cursor: help;
+}
+
+.maze-gem {
+  color: var(--accent, var(--gold));
+  font-size: 20px;
+  animation: gem-idle 2s ease-in-out infinite;
+}
+
+@keyframes gem-idle {
+  0%, 100% { opacity: 0.6; }
+  50%      { opacity: 1; }
+}
+
+.maze-gem.maze-gem-near {
+  animation: gem-pulse 0.6s ease-in-out infinite;
+  text-shadow: 0 0 8px var(--accent, var(--gold));
+}
+
+@keyframes gem-pulse {
+  0%, 100% { opacity: 0.7; transform: scale(1); }
+  50%      { opacity: 1; transform: scale(1.3); }
+}
+
+/* Easter egg tile */
+
+.maze-egg {
+  color: var(--gold);
+  opacity: 0.4;
+  cursor: pointer;
+  font-size: 16px;
+  transition: opacity 0.2s;
+}
+
+.maze-egg:hover {
+  opacity: 0.9;
+}
+
+/* Player */
+
+.maze-player {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.12s ease-out;
+  pointer-events: none;
+  z-index: 5;
+}
+
+.maze-player::after {
+  content: '';
+  width: 22px;
+  height: 22px;
+  border-radius: 4px;
+  background: var(--gold);
+  box-shadow: 0 0 10px rgba(245, 200, 66, 0.5), 0 0 20px rgba(245, 200, 66, 0.2);
+}
+
+/* Mobile controls */
+
+.maze-controls {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 1.5rem;
+}
+
+.maze-ctrl-row {
+  display: flex;
+  gap: 0.4rem;
+}
+
+.maze-ctrl-btn {
+  width: 56px;
+  height: 56px;
+  font-family: inherit;
+  font-size: 1.8em;
+  background: rgba(255, 255, 255, 0.04);
+  border: 2px solid var(--border-dim);
+  border-radius: 6px;
+  color: var(--text-light);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color 0.15s, background 0.15s;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.maze-ctrl-btn:active {
+  border-color: var(--gold);
+  background: rgba(245, 200, 66, 0.08);
+}
+
+/* ───────────── BEAST REGION THEME ───────────── */
+
+[data-region="beast"] .maze-wall {
+  background: #1a0a2a;
+  box-shadow: inset 0 0 6px rgba(26, 0, 48, 0.9);
+}
+
+[data-region="beast"] .maze-path {
+  background: #151020;
+}
+
+[data-region="beast"] .maze-obstacle {
+  background: #0a1a1a;
+}
+
+/* Pipe obstacle — water shimmer */
+
+.maze-pipe {
+  animation: pipe-shimmer 3s ease-in-out infinite;
+}
+
+@keyframes pipe-shimmer {
+  0%, 100% { opacity: 0.4; }
+  50%      { opacity: 0.7; }
+}
+
+/* Vignette overlay for claustrophobic feel */
+
+.maze-vignette {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 50% 50%, transparent 40%, rgba(0, 0, 0, 0.6) 100%);
+  pointer-events: none;
+  z-index: 4;
+}
+
+/* ───────────── ENEMY (GLUS) ───────────── */
+
+.maze-enemy {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.3s linear;
+  pointer-events: none;
+  z-index: 3;
+}
+
+.maze-enemy::after {
+  content: '';
+  width: 26px;
+  height: 26px;
+  border-radius: 40%;
+  background: #1a0030;
+  box-shadow: 0 0 12px #6a00aa, 0 0 24px rgba(106, 0, 170, 0.4);
+  animation: glus-pulse 2s ease-in-out infinite;
+}
+
+@keyframes glus-pulse {
+  0%, 100% { box-shadow: 0 0 12px #6a00aa, 0 0 24px rgba(106, 0, 170, 0.4); }
+  50%      { box-shadow: 0 0 18px #6a00aa, 0 0 36px rgba(106, 0, 170, 0.5); }
+}
+
+/* ───────────── CATCH OVERLAY ───────────── */
+
+.maze-catch-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(10, 0, 16, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 20;
+  animation: fade-in 0.4s ease-out;
+}
+
+.maze-catch-content {
+  text-align: center;
+  padding: 3rem;
+}
+
+.maze-catch-title {
+  font-size: 1.6em;
+  color: #8a3aaa;
+  margin-bottom: 1.2rem;
+}
+
+.maze-catch-text {
+  font-size: 0.9em;
+  color: var(--text-light);
+  opacity: 0.6;
+  margin-bottom: 2.5rem;
+}
+
+.maze-catch-btn {
+  font-family: inherit;
+  font-size: 1em;
+  color: var(--bg-dark);
+  background: var(--gold);
+  border: none;
+  border-radius: 4px;
+  padding: 1rem 2rem;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.maze-catch-btn:hover {
+  opacity: 0.85;
+}
+
+/* ───────────── MAZE WIN OVERLAY ───────────── */
+
+.maze-win-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 20;
+  animation: fade-in 0.4s ease-out;
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.maze-win-content {
+  text-align: center;
+  padding: 3rem;
+}
+
+.maze-win-gem {
+  width: 48px;
+  height: 48px;
+  margin: 0 auto 2rem;
+  border-radius: 8px;
+  background: var(--accent, var(--gold));
+  box-shadow: 0 0 20px var(--accent, var(--gold)), 0 0 40px var(--accent, var(--gold));
+  animation: win-gem-pulse 1s ease-in-out infinite;
+}
+
+@keyframes win-gem-pulse {
+  0%, 100% { box-shadow: 0 0 20px var(--accent, var(--gold)), 0 0 40px var(--accent, var(--gold)); }
+  50%      { box-shadow: 0 0 30px var(--accent, var(--gold)), 0 0 60px var(--accent, var(--gold)); }
+}
+
+.maze-win-title {
+  font-size: 1.8em;
+  color: var(--gold);
+  margin-bottom: 1.2rem;
+}
+
+.maze-win-text {
+  font-size: 0.9em;
+  color: var(--text-light);
+  opacity: 0.7;
+  margin-bottom: 2.5rem;
+}
+
+.maze-win-btn {
+  font-family: inherit;
+  font-size: 1em;
+  color: var(--bg-dark);
+  background: var(--gold);
+  border: none;
+  border-radius: 4px;
+  padding: 1rem 2rem;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.maze-win-btn:hover {
+  opacity: 0.85;
+}
+
+/* ───────────── EASTER EGG POPUP ───────────── */
+
+.maze-egg-popup {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 30;
+}
+
+.maze-egg-popup-inner {
+  background: #141210;
+  border: 2px solid var(--gold);
+  border-radius: 8px;
+  padding: 2.5rem;
+  max-width: 380px;
+  text-align: center;
+}
+
+.maze-egg-label {
+  font-size: 0.7em;
+  color: var(--gold);
+  opacity: 0.6;
+  margin-bottom: 1.2rem;
+  letter-spacing: 0.15em;
+}
+
+.maze-egg-text {
+  font-size: 0.85em;
+  line-height: 2;
+  margin-bottom: 2rem;
+}
+
+.maze-egg-close {
+  font-family: inherit;
+  font-size: 0.9em;
+  color: var(--bg-dark);
+  background: var(--gold);
+  border: none;
+  border-radius: 4px;
+  padding: 0.8rem 1.6rem;
+  cursor: pointer;
+}
+
+/* ───────────── RESPONSIVE ───────────── */
+
+@media (max-width: 600px) {
+  .boot-title {
+    font-size: 2em;
+  }
+
+  .belt-slots {
+    gap: 0.8rem;
+  }
+
+  .gem-slot {
+    width: 28px;
+    height: 28px;
+  }
+
+  .gem-slot .gem-inner {
+    width: 14px;
+    height: 14px;
+  }
+
+  .belt-progress {
+    gap: 0.6rem;
+    padding: 1rem 0.5rem;
+  }
+
+  .belt-gem {
+    width: 26px;
+    height: 26px;
+  }
+
+  .belt-gem .gem-inner {
+    width: 14px;
+    height: 14px;
+  }
+
+  .belt-gem-label {
+    font-size: 0.5em;
+  }
+
+  .mode-heading {
+    font-size: 1.8em;
+  }
+
+  .region-popup {
+    min-width: auto;
+    width: 90vw;
+    padding: 2rem 1.6rem;
+  }
+
+  .maze-hud {
+    flex-direction: column;
+    gap: 0.5rem;
+    text-align: center;
+  }
+
+  .maze-grid {
+    max-width: 100vw;
+  }
+
+  .maze-tile {
+    font-size: 10px;
+  }
+
+  .region-intro-name {
+    font-size: 1.6em;
+  }
+
+  .maze-ctrl-btn {
+    width: 48px;
+    height: 48px;
+  }
+}
+
+/* ───────────── SHIFTING SANDS ───────────── */
+
+[data-region="sands"] {
+  background: #1a0e00;
+}
+
+.sands-shimmer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    repeating-linear-gradient(
+      90deg,
+      rgba(196, 134, 42, 0.03) 0px,
+      rgba(196, 134, 42, 0.06) 40px,
+      rgba(196, 134, 42, 0.03) 80px
+    );
+  animation: sands-drift 18s linear infinite;
+  z-index: 0;
+}
+
+@keyframes sands-drift {
+  from { background-position: 0 0; }
+  to   { background-position: 200px 0; }
+}
+
+.sands-hud {
+  position: relative;
+  z-index: 2;
+  max-width: none;
+}
+
+.sands-hud .maze-hud-region {
+  color: var(--sands-amber);
+}
+
+.sands-subhud {
+  position: relative;
+  z-index: 2;
+  font-size: 0.7em;
+  color: var(--sands-amber);
+  opacity: 0.55;
+  margin-bottom: 1.2rem;
+  letter-spacing: 0.1em;
+  text-align: center;
+}
+
+.sands-grid {
+  display: grid;
+  gap: 0;
+  position: relative;
+  border: 2px solid #5a3a10;
+  border-radius: 4px;
+  overflow: hidden;
+  z-index: 1;
+  box-shadow: 0 0 40px rgba(196, 134, 42, 0.15), inset 0 0 30px rgba(0, 0, 0, 0.6);
+}
+
+.sands-tile {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+  transition: background 0.3s, opacity 0.3s;
+}
+
+.sands-wall {
+  background: #0a0600;
+  box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.9);
+}
+
+.sands-sand {
+  background: rgba(196, 134, 42, 0.6);
+  background-image:
+    radial-gradient(rgba(0, 0, 0, 0.12) 1px, transparent 1px),
+    radial-gradient(rgba(255, 220, 160, 0.06) 1px, transparent 1px);
+  background-size: 6px 6px, 10px 10px;
+  background-position: 0 0, 3px 3px;
+  border: 1px solid rgba(90, 58, 16, 0.4);
+}
+
+.tile-sinking-warned {
+  animation: pulse-amber 0.8s infinite;
+  position: relative;
+}
+
+.tile-sinking-warned::before {
+  content: '';
+  position: absolute;
+  inset: 4px;
+  border: 1px dashed rgba(60, 20, 0, 0.55);
+  border-radius: 2px;
+  pointer-events: none;
+}
+
+.tile-sinking-warned::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(45deg, transparent 46%, rgba(40, 15, 0, 0.55) 46%, rgba(40, 15, 0, 0.55) 54%, transparent 54%),
+    linear-gradient(-45deg, transparent 48%, rgba(40, 15, 0, 0.4) 48%, rgba(40, 15, 0, 0.4) 52%, transparent 52%);
+  background-size: 20px 20px, 14px 14px;
+  pointer-events: none;
+}
+
+@keyframes pulse-amber {
+  0%, 100% {
+    background-color: rgba(196, 134, 42, 0.6);
+    box-shadow: inset 0 0 10px rgba(255, 170, 60, 0.2);
+  }
+  50% {
+    background-color: rgba(230, 160, 60, 0.75);
+    box-shadow: inset 0 0 18px rgba(255, 190, 80, 0.5);
+  }
+}
+
+.tile-sinking-crumbling {
+  animation: shake 0.3s infinite;
+  background-color: #3a2000 !important;
+  background-image: none !important;
+  box-shadow: inset 0 0 12px rgba(0, 0, 0, 0.7);
+}
+
+@keyframes shake {
+  0%, 100% { transform: translate(0, 0); }
+  25%      { transform: translate(-1px, 1px); }
+  50%      { transform: translate(1px, -1px); }
+  75%      { transform: translate(-1px, -1px); }
+}
+
+.tile-void {
+  background: #0a0800 !important;
+  background-image: none !important;
+  opacity: 0.3;
+  pointer-events: none;
+  box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.95);
+  animation: none !important;
+}
+
+/* Gem tile — midnight blue with silver sparkles */
+
+.sands-gem-tile {
+  background: radial-gradient(circle at 50% 50%, #2a2a6a 0%, #1a1a4a 60%, #0a0a2a 100%) !important;
+  background-image: radial-gradient(circle at 50% 50%, #2a2a6a 0%, #1a1a4a 60%, #0a0a2a 100%) !important;
+  box-shadow: inset 0 0 16px rgba(100, 100, 200, 0.25), 0 0 18px rgba(40, 40, 120, 0.4);
+  position: relative;
+  overflow: hidden;
+}
+
+.sands-gem-spark {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  background: #fff;
+  border-radius: 50%;
+  box-shadow: 0 0 4px #fff, 0 0 8px rgba(200, 220, 255, 0.6);
+  animation: gem-sparkle 1.8s ease-in-out infinite;
+}
+
+.sands-gem-spark-1 { top: 22%; left: 30%; animation-delay: 0s; }
+.sands-gem-spark-2 { top: 60%; left: 70%; animation-delay: 0.45s; }
+.sands-gem-spark-3 { top: 75%; left: 25%; animation-delay: 0.9s; }
+.sands-gem-spark-4 { top: 35%; left: 72%; animation-delay: 1.35s; }
+
+@keyframes gem-sparkle {
+  0%, 100% { opacity: 0.2; transform: scale(0.6); }
+  50%      { opacity: 1; transform: scale(1.2); }
+}
+
+/* Player — gold with amber glow */
+
+.sands-player {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.12s ease-out;
+  pointer-events: none;
+  z-index: 5;
+}
+
+.sands-player::after {
+  content: '';
+  width: 62%;
+  height: 62%;
+  border-radius: 4px;
+  background: var(--gold);
+  box-shadow:
+    0 0 10px rgba(255, 180, 60, 0.7),
+    0 0 22px rgba(196, 134, 42, 0.45),
+    inset 0 0 6px rgba(255, 220, 160, 0.5);
+}
+
+/* Death overlay */
+
+.sands-death-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(20, 10, 0, 0.92);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 20;
+  animation: fade-in 0.4s ease-out;
+}
+
+.sands-death-content {
+  text-align: center;
+  padding: 3rem;
+}
+
+.sands-death-title {
+  font-size: 1.6em;
+  color: var(--sands-amber);
+  margin-bottom: 1.2rem;
+  text-shadow: 0 0 12px rgba(196, 134, 42, 0.5);
+}
+
+.sands-death-text {
+  font-size: 0.9em;
+  color: var(--text-light);
+  opacity: 0.65;
+  margin-bottom: 2.5rem;
+}
+
+.sands-death-btn {
+  font-family: inherit;
+  font-size: 1em;
+  color: var(--bg-dark);
+  background: var(--sands-amber);
+  border: none;
+  border-radius: 4px;
+  padding: 1rem 2rem;
+  cursor: pointer;
+  transition: opacity 0.2s, box-shadow 0.2s;
+}
+
+.sands-death-btn:hover {
+  opacity: 0.9;
+  box-shadow: 0 0 16px rgba(196, 134, 42, 0.5);
+}
+
+/* Win overlay — sands-specific tint */
+
+.sands-win-overlay .maze-win-title {
+  color: var(--sands-amber);
+}
+
+.sands-win-gem {
+  background: var(--sands-amber) !important;
+  box-shadow: 0 0 20px var(--sands-amber), 0 0 40px var(--sands-amber) !important;
+}
+
+/* Warning stone overlay (easter egg) */
+
+.sands-stone-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 8, 0, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 40;
+  animation: fade-in 0.4s ease-out;
+}
+
+.sands-stone {
+  background:
+    linear-gradient(160deg, #3a2810 0%, #2a1a08 50%, #1a0e04 100%);
+  border: 3px solid var(--sands-amber);
+  border-radius: 4px;
+  padding: 2.4rem 2rem;
+  text-align: center;
+  max-width: 420px;
+  box-shadow:
+    0 0 30px rgba(196, 134, 42, 0.35),
+    inset 0 0 20px rgba(0, 0, 0, 0.6);
+  position: relative;
+  image-rendering: pixelated;
+}
+
+.sands-stone::before,
+.sands-stone::after {
+  content: '';
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  background: var(--sands-amber);
+  opacity: 0.4;
+}
+
+.sands-stone::before { top: -6px; left: -6px; }
+.sands-stone::after  { bottom: -6px; right: -6px; }
+
+.sands-stone-header {
+  font-size: 0.95em;
+  color: var(--sands-amber);
+  letter-spacing: 0.12em;
+  margin-bottom: 1.6rem;
+  text-shadow: 0 0 8px rgba(196, 134, 42, 0.4);
+}
+
+.sands-stone-body {
+  font-size: 0.8em;
+  color: var(--text-light);
+  opacity: 0.85;
+  line-height: 2.2;
+  margin-bottom: 1.6rem;
+}
+
+.sands-stone-body p { margin: 0; }
+
+.sands-stone-footer {
+  font-size: 0.65em;
+  color: var(--sands-amber);
+  opacity: 0.6;
+  letter-spacing: 0.1em;
+  margin-bottom: 2rem;
+  border-top: 1px dashed rgba(196, 134, 42, 0.3);
+  padding-top: 1rem;
+}
+
+.sands-stone-btn {
+  font-family: inherit;
+  font-size: 0.9em;
+  color: var(--bg-dark);
+  background: var(--sands-amber);
+  border: none;
+  border-radius: 2px;
+  padding: 0.9rem 2rem;
+  cursor: pointer;
+  transition: opacity 0.2s, box-shadow 0.2s;
+}
+
+.sands-stone-btn:hover {
+  opacity: 0.9;
+  box-shadow: 0 0 14px rgba(196, 134, 42, 0.5);
+}
+
+/* ───────────── LAKE OF TEARS / DIALOGUE ───────────── */
+
+[data-region="lake"] {
+  background: #060e18;
+  min-height: 100vh;
+}
+
+.lake-drift {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    repeating-linear-gradient(
+      0deg,
+      rgba(26, 58, 92, 0.04) 0px,
+      rgba(26, 58, 92, 0.08) 30px,
+      rgba(26, 58, 92, 0.04) 60px
+    );
+  animation: lake-water-drift 22s linear infinite;
+  z-index: 0;
+}
+
+@keyframes lake-water-drift {
+  from { background-position: 0 0; }
+  to   { background-position: 0 180px; }
+}
+
+.dialogue-hud {
+  position: relative;
+  z-index: 2;
+  max-width: 900px;
+  width: 100%;
+  padding: 1rem 1.5rem;
+}
+
+.dialogue-hud .maze-hud-region {
+  color: #4a8ab5;
+}
+
+.dialogue-trust-meter {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.8rem;
+  font-size: 0.7em;
+  color: var(--text-light);
+  opacity: 0.85;
+  letter-spacing: 0.08em;
+}
+
+.dialogue-trust-label {
+  color: #4a8ab5;
+}
+
+.dialogue-trust-dots {
+  display: inline-flex;
+  gap: 0.4rem;
+  font-size: 1.3em;
+  transition: color 0.6s;
+}
+
+.trust-dot {
+  color: rgba(74, 138, 181, 0.25);
+  transition: color 0.4s, text-shadow 0.4s, transform 0.3s;
+}
+
+.trust-dot-filled {
+  color: var(--lake-blue);
+  text-shadow: 0 0 6px rgba(74, 138, 181, 0.6);
+  animation: trust-fill 0.4s ease-out;
+}
+
+@keyframes trust-fill {
+  from { transform: scale(0.5); opacity: 0; }
+  to   { transform: scale(1); opacity: 1; }
+}
+
+.dialogue-trust-dots.trust-golden .trust-dot-filled {
+  color: var(--gold);
+  text-shadow: 0 0 10px rgba(245, 200, 66, 0.7);
+}
+
+.dialogue-trust-dots.trust-empty .trust-dot-filled,
+.dialogue-trust-dots.trust-empty .trust-dot {
+  color: rgba(170, 0, 0, 0.5);
+  text-shadow: none;
+}
+
+/* Dialogue stage */
+
+.dialogue-stage {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  gap: 2rem;
+  align-items: flex-start;
+  max-width: 900px;
+  width: 100%;
+  padding: 1rem 1.5rem;
+}
+
+/* Portrait */
+
+.dialogue-portrait {
+  position: relative;
+  width: 200px;
+  min-width: 200px;
+  height: 260px;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid var(--lake-blue);
+  box-shadow: 0 0 20px rgba(26, 58, 92, 0.3), inset 0 0 30px rgba(0, 0, 0, 0.7);
+  animation: portrait-breathe 3s ease-in-out infinite;
+  flex-shrink: 0;
+}
+
+.portrait-soldeen {
+  background: radial-gradient(ellipse at 50% 70%, #0a2030 0%, #040a14 80%);
+}
+
+.portrait-soldeen .portrait-water {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 55%;
+  background:
+    repeating-linear-gradient(
+      90deg,
+      rgba(74, 138, 181, 0.15) 0px,
+      rgba(74, 138, 181, 0.22) 6px,
+      rgba(26, 58, 92, 0.2) 12px
+    );
+  opacity: 0.8;
+  animation: portrait-water-move 4s ease-in-out infinite;
+}
+
+@keyframes portrait-water-move {
+  0%, 100% { transform: translateX(0); }
+  50%      { transform: translateX(-6px); }
+}
+
+.portrait-soldeen .portrait-body {
+  position: absolute;
+  left: 50%;
+  top: 32%;
+  transform: translateX(-50%);
+  width: 130px;
+  height: 160px;
+  background:
+    radial-gradient(ellipse at 50% 30%, #1a3a4a 0%, #0a2030 60%, transparent 90%);
+  border-radius: 70% 70% 45% 45% / 55% 55% 45% 45%;
+  box-shadow:
+    inset 0 -12px 20px rgba(0, 0, 0, 0.7),
+    0 0 24px rgba(26, 58, 92, 0.5);
+}
+
+.portrait-soldeen .portrait-body::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 60%;
+  transform: translateX(-50%);
+  width: 70px;
+  height: 80px;
+  background: radial-gradient(ellipse at 50% 40%, #0a2030 0%, transparent 70%);
+  border-radius: 50%;
+  opacity: 0.8;
+}
+
+.portrait-soldeen .portrait-eye {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #e8d5a3;
+  box-shadow: 0 0 6px rgba(232, 213, 163, 0.8);
+  top: 45%;
+  animation: portrait-eye-glow 2.4s ease-in-out infinite;
+}
+
+.portrait-eye-1 { left: 42%; }
+.portrait-eye-2 { left: 54%; }
+
+@keyframes portrait-eye-glow {
+  0%, 100% { opacity: 0.5; }
+  50%      { opacity: 1; }
+}
+
+@keyframes portrait-breathe {
+  0%, 100% { transform: scale(1); }
+  50%      { transform: scale(1.02); }
+}
+
+.dialogue-portrait.portrait-react-positive {
+  box-shadow: 0 0 30px #1a8a6a, inset 0 0 30px rgba(0, 0, 0, 0.7);
+  animation: portrait-pulse-positive 0.8s ease-out;
+}
+
+@keyframes portrait-pulse-positive {
+  0%   { box-shadow: 0 0 10px #1a8a6a; }
+  50%  { box-shadow: 0 0 40px #1a8a6a, inset 0 0 30px rgba(0, 0, 0, 0.7); }
+  100% { box-shadow: 0 0 20px rgba(26, 58, 92, 0.3), inset 0 0 30px rgba(0, 0, 0, 0.7); }
+}
+
+.dialogue-portrait.portrait-react-negative {
+  box-shadow: 0 0 30px #aa0000, inset 0 0 30px rgba(0, 0, 0, 0.7);
+  animation: portrait-pulse-negative 0.8s ease-out;
+}
+
+@keyframes portrait-pulse-negative {
+  0%   { box-shadow: 0 0 10px #aa0000; }
+  50%  { box-shadow: 0 0 40px #aa0000, inset 0 0 30px rgba(0, 0, 0, 0.7); }
+  100% { box-shadow: 0 0 20px rgba(26, 58, 92, 0.3), inset 0 0 30px rgba(0, 0, 0, 0.7); }
+}
+
+.dialogue-portrait.portrait-react-neutral {
+  animation: portrait-pulse-neutral 0.6s ease-out;
+}
+
+@keyframes portrait-pulse-neutral {
+  0%, 100% { box-shadow: 0 0 20px rgba(26, 58, 92, 0.3), inset 0 0 30px rgba(0, 0, 0, 0.7); }
+  50%      { box-shadow: 0 0 28px rgba(74, 138, 181, 0.6), inset 0 0 30px rgba(0, 0, 0, 0.7); }
+}
+
+.dialogue-portrait.portrait-golden {
+  box-shadow: 0 0 36px var(--gold), inset 0 0 30px rgba(0, 0, 0, 0.6);
+  border-color: var(--gold);
+  animation: portrait-golden-glow 1.6s ease-in-out infinite;
+}
+
+@keyframes portrait-golden-glow {
+  0%, 100% { box-shadow: 0 0 30px var(--gold), inset 0 0 30px rgba(0, 0, 0, 0.6); }
+  50%      { box-shadow: 0 0 50px var(--gold), inset 0 0 30px rgba(0, 0, 0, 0.6); }
+}
+
+/* Dialogue box */
+
+.dialogue-box {
+  flex: 1;
+  min-height: 200px;
+  background: #0a1a2a;
+  border: 1px solid var(--lake-blue);
+  border-radius: 6px;
+  padding: 1.6rem 1.8rem;
+  position: relative;
+  cursor: pointer;
+  box-shadow: inset 0 0 24px rgba(0, 0, 0, 0.5);
+}
+
+.dialogue-speaker {
+  font-size: 0.85em;
+  color: #4a8ab5;
+  margin-bottom: 1rem;
+  letter-spacing: 0.1em;
+  min-height: 1em;
+}
+
+.dialogue-speaker.is-narrator {
+  display: none;
+}
+
+.dialogue-text {
+  font-size: 0.85em;
+  line-height: 2;
+  color: var(--text-light);
+  white-space: pre-line;
+}
+
+.dialogue-text.is-narrator {
+  font-style: italic;
+  opacity: 0.7;
+}
+
+.dialogue-text.is-typing::after {
+  content: '\2582';
+  color: var(--lake-blue);
+  margin-left: 2px;
+  animation: caret-blink 0.6s step-end infinite;
+}
+
+@keyframes caret-blink {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0; }
+}
+
+.dialogue-skip-hint {
+  position: absolute;
+  bottom: 0.4rem;
+  right: 0.8rem;
+  font-size: 0.55em;
+  color: var(--text-light);
+  opacity: 0.3;
+  letter-spacing: 0.1em;
+  pointer-events: none;
+}
+
+/* Choices */
+
+.dialogue-choices {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  max-width: 900px;
+  width: 100%;
+  padding: 1.4rem 1.5rem 0.6rem;
+}
+
+.dialogue-choice {
+  font-family: inherit;
+  font-size: 0.75em;
+  line-height: 1.9;
+  text-align: left;
+  color: var(--text-light);
+  background: #0a1525;
+  border: 1px solid var(--lake-blue);
+  border-radius: 4px;
+  padding: 1rem 1.4rem;
+  cursor: pointer;
+  transition: box-shadow 0.2s, background 0.2s, transform 0.15s;
+  animation: choice-appear 0.4s ease-out;
+}
+
+@keyframes choice-appear {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.dialogue-choice:hover,
+.dialogue-choice:focus-visible {
+  background: #0f2035;
+  box-shadow: 0 0 10px var(--lake-blue);
+  outline: none;
+}
+
+.dialogue-choice-disabled {
+  opacity: 0.35;
+  pointer-events: none;
+  cursor: default;
+}
+
+/* Explorer hint */
+
+.dialogue-hint {
+  max-width: 900px;
+  width: 100%;
+  padding: 0.4rem 1.5rem 1.5rem;
+  font-size: 0.65em;
+  font-style: italic;
+  color: #4a8ab5;
+  opacity: 0;
+  letter-spacing: 0.05em;
+  line-height: 2;
+  transition: opacity 0.3s;
+  position: relative;
+  z-index: 1;
+}
+
+.dialogue-hint.visible {
+  opacity: 0.7;
+}
+
+.dialogue-hint::before {
+  content: '\25B8  ';
+  opacity: 0.6;
+}
+
+/* Win / fail overlay tints */
+
+.dialogue-win-gem {
+  background: var(--lake-blue) !important;
+  box-shadow: 0 0 20px var(--lake-blue), 0 0 40px var(--lake-blue) !important;
+}
+
+.dialogue-win-overlay .maze-win-title {
+  color: var(--gold);
+}
+
+.dialogue-fail-overlay {
+  background: rgba(10, 4, 0, 0.92);
+}
+
+.dialogue-fail-title {
+  color: #aa4444;
+}
+
+/* Responsive */
+
+@media (max-width: 700px) {
+  .dialogue-stage {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1rem;
+  }
+
+  .dialogue-portrait {
+    width: 100%;
+    height: 180px;
+    min-width: 0;
+  }
+
+  .dialogue-hud {
+    flex-direction: column;
+    gap: 0.6rem;
+    align-items: flex-start;
+  }
+
+  .dialogue-choice {
+    font-size: 0.7em;
+    padding: 0.9rem 1rem;
+  }
+}
+
+/* ───────────── CITY OF THE RATS / MEMORY ───────────── */
+
+[data-region="rats"] {
+  background:
+    radial-gradient(ellipse at 30% 20%, rgba(74, 64, 53, 0.08) 0%, transparent 60%),
+    radial-gradient(ellipse at 70% 80%, rgba(50, 30, 15, 0.1) 0%, transparent 60%),
+    #100c08;
+  min-height: 100vh;
+}
+
+[data-region="rats"]::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(rgba(74, 64, 53, 0.03) 1px, transparent 1px),
+    radial-gradient(rgba(20, 12, 4, 0.05) 1px, transparent 1px);
+  background-size: 3px 3px, 7px 7px;
+  background-position: 0 0, 2px 1px;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.6;
+}
+
+.memory-hud {
+  position: relative;
+  z-index: 2;
+  max-width: 560px;
+  width: 100%;
+  padding: 1.2rem 1rem 0.8rem;
+}
+
+.memory-hud .maze-hud-region {
+  color: var(--rat-grey);
+}
+
+.memory-hud-progress {
+  font-size: 0.75em;
+  color: var(--text-light);
+  opacity: 0.7;
+  letter-spacing: 0.08em;
+}
+
+.memory-matched-count {
+  color: var(--rat-grey);
+  font-weight: normal;
+}
+
+/* Grid */
+
+.memory-grid {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: repeat(4, 100px);
+  grid-template-rows: repeat(4, 100px);
+  gap: 10px;
+  margin: 1rem auto;
+  padding: 1rem;
+  border: 1px solid #2a1a0a;
+  border-radius: 6px;
+  background: rgba(0, 0, 0, 0.3);
+  box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.6);
+}
+
+/* Card */
+
+.memory-card {
+  position: relative;
+  width: 100px;
+  height: 100px;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  perspective: 600px;
+  font-family: inherit;
+}
+
+.memory-card-inner {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+  transition: transform 0.4s ease;
+}
+
+.memory-card.flipped .memory-card-inner {
+  transform: rotateY(180deg);
+}
+
+.memory-card-back,
+.memory-card-front {
+  position: absolute;
+  inset: 0;
+  border-radius: 6px;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #3a2a18;
+}
+
+.memory-card-back {
+  background: #2a1a0a;
+  background-image:
+    radial-gradient(rgba(74, 64, 53, 0.09) 1px, transparent 1px),
+    radial-gradient(rgba(10, 6, 4, 0.4) 1px, transparent 1px);
+  background-size: 10px 10px, 14px 14px;
+  background-position: 0 0, 5px 5px;
+  box-shadow: inset 0 0 14px rgba(0, 0, 0, 0.8);
+}
+
+.memory-card-back::before {
+  content: '\25C6';
+  color: rgba(74, 64, 53, 0.12);
+  font-size: 28px;
+  text-shadow: 0 0 2px rgba(0, 0, 0, 0.8);
+}
+
+.memory-card-front {
+  background: #3a2a18;
+  color: #c4a56a;
+  transform: rotateY(180deg);
+  gap: 0.4rem;
+  padding: 0.4rem;
+  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.memory-card-icon {
+  font-size: 32px;
+  line-height: 1;
+}
+
+.memory-card-label {
+  font-size: 0.55em;
+  letter-spacing: 0.05em;
+  color: var(--text-light);
+  opacity: 0.85;
+  text-align: center;
+  line-height: 1.3;
+}
+
+.memory-card:hover:not(.flipped):not(.matched) .memory-card-back {
+  border-color: var(--rat-grey);
+  box-shadow: inset 0 0 14px rgba(0, 0, 0, 0.8), 0 0 6px rgba(74, 64, 53, 0.35);
+}
+
+.memory-card.matched .memory-card-front {
+  border-color: #2d5a27;
+  box-shadow: 0 0 12px #2d5a27, inset 0 0 12px rgba(45, 90, 39, 0.35);
+}
+
+.memory-card.mismatched .memory-card-front {
+  border-color: #aa0000;
+  box-shadow: 0 0 14px #aa0000, inset 0 0 14px rgba(170, 0, 0, 0.4);
+  animation: mem-card-shake 0.25s ease-out 2;
+}
+
+@keyframes mem-card-shake {
+  0%, 100% { transform: rotateY(180deg) translateX(0); }
+  25%      { transform: rotateY(180deg) translateX(-2px); }
+  75%      { transform: rotateY(180deg) translateX(2px); }
+}
+
+.memory-card.memory-card-win-pulse .memory-card-front {
+  animation: mem-win-pulse 0.9s ease-in-out infinite;
+  border-color: var(--gold);
+}
+
+@keyframes mem-win-pulse {
+  0%, 100% { box-shadow: 0 0 14px var(--gold), inset 0 0 14px rgba(245, 200, 66, 0.4); }
+  50%      { box-shadow: 0 0 26px var(--gold), inset 0 0 18px rgba(245, 200, 66, 0.6); }
+}
+
+/* Feedback */
+
+.memory-feedback {
+  position: relative;
+  z-index: 1;
+  min-height: 1.6em;
+  margin-top: 1.2rem;
+  font-size: 0.75em;
+  font-style: italic;
+  color: var(--text-light);
+  opacity: 0;
+  text-align: center;
+  letter-spacing: 0.04em;
+  transition: opacity 0.3s;
+}
+
+.memory-feedback-visible {
+  opacity: 0.6;
+  animation: mem-feedback-fade 0.4s ease-out;
+}
+
+@keyframes mem-feedback-fade {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 0.6; transform: translateY(0); }
+}
+
+.memory-feedback-wrong {
+  color: #aa6666;
+}
+
+.memory-feedback-matched {
+  color: #8aa58a;
+}
+
+/* Explorer description panel */
+
+.memory-desc-panel {
+  position: fixed;
+  left: 50%;
+  bottom: 1rem;
+  transform: translate(-50%, 150%);
+  max-width: 90vw;
+  width: 560px;
+  background: #14100a;
+  border: 1px solid var(--rat-grey);
+  border-radius: 6px;
+  padding: 1rem 1.2rem;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  font-size: 0.7em;
+  color: var(--text-light);
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.6);
+  transition: transform 0.4s ease;
+  z-index: 25;
+}
+
+.memory-desc-panel.visible {
+  transform: translate(-50%, 0);
+}
+
+.memory-desc-icon {
+  font-size: 1.6em;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.memory-desc-label {
+  color: var(--rat-grey);
+  font-weight: normal;
+  letter-spacing: 0.06em;
+  flex-shrink: 0;
+}
+
+.memory-desc-dash {
+  opacity: 0.4;
+  flex-shrink: 0;
+}
+
+.memory-desc-text {
+  line-height: 1.7;
+  opacity: 0.85;
+}
+
+/* Win overlay tint */
+
+.memory-win-gem {
+  background: var(--rat-grey) !important;
+  box-shadow: 0 0 20px var(--rat-grey), 0 0 40px var(--rat-grey) !important;
+}
+
+/* Responsive */
+
+@media (max-width: 520px) {
+  .memory-grid {
+    grid-template-columns: repeat(4, 68px);
+    grid-template-rows: repeat(4, 68px);
+    gap: 6px;
+    padding: 0.6rem;
+  }
+
+  .memory-card {
+    width: 68px;
+    height: 68px;
+  }
+
+  .memory-card-icon {
+    font-size: 22px;
+  }
+
+  .memory-card-label {
+    font-size: 0.45em;
+  }
+
+  .memory-desc-panel {
+    font-size: 0.6em;
+    padding: 0.8rem;
+    flex-wrap: wrap;
+  }
+}
+
+/* ───────────── RIDDLE ENGINE (SHARED) ───────────── */
+
+.riddle-ambient {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.riddle-hud {
+  position: relative;
+  z-index: 2;
+  max-width: 900px;
+  width: 100%;
+  padding: 1rem 1.5rem;
+}
+
+.riddle-score {
+  font-size: 0.75em;
+  color: var(--text-light);
+  opacity: 0.8;
+  letter-spacing: 0.08em;
+}
+
+.riddle-score-count {
+  color: var(--accent);
+}
+
+.riddle-stage {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  gap: 2rem;
+  align-items: flex-start;
+  max-width: 900px;
+  width: 100%;
+  padding: 1rem 1.5rem;
+}
+
+.riddle-portrait {
+  position: relative;
+  width: 200px;
+  min-width: 200px;
+  height: 260px;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid var(--accent);
+  animation: portrait-breathe 3s ease-in-out infinite;
+  flex-shrink: 0;
+  box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.7);
+}
+
+.riddle-portrait.portrait-golden {
+  box-shadow: 0 0 36px var(--gold), inset 0 0 30px rgba(0, 0, 0, 0.5);
+  border-color: var(--gold);
+  animation: portrait-golden-glow 1.6s ease-in-out infinite;
+}
+
+.riddle-box {
+  flex: 1;
+  min-height: 220px;
+  background: #0a1a10;
+  border: 1px solid var(--accent);
+  border-radius: 6px;
+  padding: 1.6rem 1.8rem;
+  position: relative;
+  cursor: pointer;
+  box-shadow: inset 0 0 24px rgba(0, 0, 0, 0.5);
+}
+
+.riddle-speaker {
+  font-size: 0.85em;
+  color: var(--accent);
+  margin-bottom: 1rem;
+  letter-spacing: 0.1em;
+  min-height: 1em;
+}
+
+.riddle-text {
+  font-size: 0.85em;
+  line-height: 2;
+  color: var(--text-light);
+  white-space: pre-line;
+}
+
+.riddle-text.is-typing::after {
+  content: '\2582';
+  color: var(--accent);
+  margin-left: 2px;
+  animation: caret-blink 0.6s step-end infinite;
+}
+
+.riddle-answers {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.8rem;
+  max-width: 900px;
+  width: 100%;
+  padding: 1.2rem 1.5rem 0.4rem;
+}
+
+.riddle-answer {
+  font-family: inherit;
+  font-size: 0.78em;
+  line-height: 1.8;
+  color: var(--text-light);
+  background: #0a1a10;
+  border: 1px solid var(--accent);
+  border-radius: 4px;
+  padding: 1rem 1.2rem;
+  cursor: pointer;
+  transition: box-shadow 0.2s, background 0.2s, transform 0.15s, border-color 0.3s;
+  text-align: center;
+  animation: choice-appear 0.4s ease-out;
+}
+
+.riddle-answer:hover,
+.riddle-answer:focus-visible {
+  background: #10241a;
+  box-shadow: 0 0 10px var(--accent);
+  outline: none;
+}
+
+.riddle-answer-disabled {
+  opacity: 0.3;
+  pointer-events: none;
+  cursor: default;
+}
+
+.riddle-answer-correct {
+  border-color: #2d5a27;
+  background: #102a14;
+  box-shadow: 0 0 18px #2d5a27;
+  opacity: 1 !important;
+}
+
+.riddle-answer-wrong {
+  border-color: #5a1a1a;
+  background: #2a0808;
+  box-shadow: 0 0 18px #aa0000;
+  opacity: 1 !important;
+  animation: riddle-shake 0.3s ease-out;
+}
+
+@keyframes riddle-shake {
+  0%, 100% { transform: translateX(0); }
+  25%      { transform: translateX(-3px); }
+  75%      { transform: translateX(3px); }
+}
+
+.riddle-hint {
+  max-width: 900px;
+  width: 100%;
+  padding: 0.2rem 1.5rem 0.8rem;
+  font-size: 0.65em;
+  font-style: italic;
+  color: var(--accent);
+  opacity: 0;
+  line-height: 2;
+  transition: opacity 0.3s;
+  position: relative;
+  z-index: 1;
+}
+
+.riddle-hint.visible {
+  opacity: 0.7;
+}
+
+.riddle-hint::before {
+  content: '\25B8  ';
+  opacity: 0.6;
+}
+
+.riddle-feedback {
+  max-width: 900px;
+  width: 100%;
+  padding: 0.4rem 1.5rem 1.6rem;
+  font-size: 0.72em;
+  font-style: italic;
+  text-align: center;
+  color: var(--text-light);
+  opacity: 0;
+  transition: opacity 0.3s;
+  position: relative;
+  z-index: 1;
+  line-height: 1.8;
+}
+
+.riddle-feedback.visible {
+  opacity: 0.8;
+  animation: mem-feedback-fade 0.4s ease-out;
+}
+
+.riddle-feedback.feedback-correct { color: #8aa58a; }
+.riddle-feedback.feedback-wrong   { color: #aa6666; }
+
+.riddle-win-gem {
+  background: var(--accent) !important;
+  box-shadow: 0 0 20px var(--accent), 0 0 40px var(--accent) !important;
+}
+
+.riddle-fail-title {
+  color: var(--accent);
+}
+
+/* ───────────── DREAD MOUNTAIN ───────────── */
+
+[data-region="dread"] {
+  background: #060f0a;
+  min-height: 100vh;
+}
+
+.riddle-ambient-dread {
+  background:
+    radial-gradient(ellipse at 50% 100%, rgba(26, 74, 58, 0.15) 0%, transparent 60%),
+    linear-gradient(180deg, rgba(0, 0, 0, 0.4) 0%, transparent 50%);
+  animation: dread-rise 8s ease-in-out infinite;
+}
+
+@keyframes dread-rise {
+  0%, 100% { transform: translateY(0); opacity: 0.9; }
+  50%      { transform: translateY(-5px); opacity: 1; }
+}
+
+[data-region="dread"] .riddle-hud .maze-hud-region {
+  color: var(--mountain-teal);
+}
+
+.portrait-fa-glin {
+  background: radial-gradient(ellipse at 50% 70%, #0a2018 0%, #040a08 80%);
+}
+
+.portrait-faglin-body {
+  position: absolute;
+  left: 50%;
+  bottom: 15%;
+  transform: translateX(-50%);
+  width: 120px;
+  height: 120px;
+  background:
+    radial-gradient(ellipse at 50% 40%, #1a4a3a 0%, #0a2018 70%);
+  border-radius: 44% 44% 30% 30%;
+  box-shadow: inset 0 -12px 20px rgba(0, 0, 0, 0.7), 0 0 20px rgba(26, 74, 58, 0.4);
+}
+
+.portrait-faglin-head {
+  position: absolute;
+  left: 50%;
+  top: 20%;
+  transform: translateX(-50%);
+  width: 68px;
+  height: 68px;
+  background: radial-gradient(circle at 50% 40%, #2a5a4a 0%, #0a2018 80%);
+  border-radius: 50%;
+  box-shadow: inset 0 -8px 12px rgba(0, 0, 0, 0.6);
+}
+
+.portrait-faglin-head::before,
+.portrait-faglin-head::after {
+  content: '';
+  position: absolute;
+  top: 44%;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #e8d5a3;
+  box-shadow: 0 0 4px rgba(232, 213, 163, 0.7);
+  animation: portrait-eye-glow 2.4s ease-in-out infinite;
+}
+.portrait-faglin-head::before { left: 35%; }
+.portrait-faglin-head::after  { left: 60%; }
+
+.portrait-faglin-bow {
+  position: absolute;
+  right: 12%;
+  top: 42%;
+  width: 36px;
+  height: 70px;
+  border: 2px solid #3a2a18;
+  border-right: none;
+  border-radius: 50% 0 0 50%;
+  opacity: 0.55;
+}
+
+.portrait-faglin-bow::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 1px;
+  background: #c4a56a;
+  opacity: 0.7;
+}
+
+/* ───────────── VALLEY OF THE LOST ───────────── */
+
+[data-region="valley"] {
+  background: #08000f;
+  min-height: 100vh;
+  animation: valley-breathe 6s ease-in-out infinite;
+}
+
+@keyframes valley-breathe {
+  0%, 100% { filter: brightness(1); }
+  50%      { filter: brightness(0.95); }
+}
+
+.riddle-ambient-valley {
+  background:
+    radial-gradient(ellipse at 50% 20%, rgba(74, 26, 92, 0.15) 0%, transparent 60%),
+    radial-gradient(ellipse at 20% 80%, rgba(74, 26, 92, 0.1) 0%, transparent 50%);
+}
+
+[data-region="valley"] .riddle-hud .maze-hud-region {
+  color: var(--valley-violet);
+}
+
+[data-region="valley"] .riddle-box {
+  background: #100018;
+  border-color: var(--valley-violet);
+}
+
+[data-region="valley"] .riddle-answer {
+  background: #100018;
+  border-color: var(--valley-violet);
+}
+
+[data-region="valley"] .riddle-answer:hover,
+[data-region="valley"] .riddle-answer:focus-visible {
+  background: #1a002a;
+  box-shadow: 0 0 10px var(--valley-violet);
+}
+
+[data-region="valley"] .riddle-answer-correct {
+  border-color: var(--gold);
+  background: #2a2008;
+  box-shadow: 0 0 24px var(--gold);
+}
+
+.portrait-guardian {
+  background: radial-gradient(ellipse at 50% 60%, #150020 0%, #060010 80%);
+}
+
+.portrait-guardian-body {
+  position: absolute;
+  left: 50%;
+  bottom: 6%;
+  transform: translateX(-50%);
+  width: 96px;
+  height: 190px;
+  background:
+    linear-gradient(180deg, #2a0a3a 0%, #150020 60%, #06000c 100%);
+  border-radius: 48% 48% 20% 20% / 20% 20% 10% 10%;
+  box-shadow: inset 0 -10px 20px rgba(0, 0, 0, 0.8), 0 0 20px rgba(74, 26, 92, 0.4);
+}
+
+.portrait-guardian-head {
+  position: absolute;
+  left: 50%;
+  top: 12%;
+  transform: translateX(-50%);
+  width: 56px;
+  height: 66px;
+  background: radial-gradient(ellipse at 50% 40%, #3a1a4a 0%, #100018 80%);
+  border-radius: 50% 50% 40% 40%;
+  box-shadow: inset 0 -6px 10px rgba(0, 0, 0, 0.7);
+}
+
+.portrait-guardian-head::before,
+.portrait-guardian-head::after {
+  content: '';
+  position: absolute;
+  top: 48%;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: #c4a8d8;
+  box-shadow: 0 0 6px rgba(196, 168, 216, 0.8);
+  animation: portrait-eye-glow 3s ease-in-out infinite;
+}
+.portrait-guardian-head::before { left: 34%; }
+.portrait-guardian-head::after  { left: 58%; }
+
+.portrait-pet {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  bottom: 42%;
+  background: radial-gradient(circle at 40% 40%, #6a2a8a 0%, #2a0a3a 80%);
+  box-shadow: 0 0 8px rgba(106, 42, 138, 0.6);
+  animation: pet-writhe 2s ease-in-out infinite;
+}
+
+.portrait-pet-1 { left: 18%; animation-delay: 0s; }
+.portrait-pet-2 { left: 36%; animation-delay: 0.4s; }
+.portrait-pet-3 { left: 54%; animation-delay: 0.8s; }
+.portrait-pet-4 { left: 72%; animation-delay: 1.2s; }
+
+@keyframes pet-writhe {
+  0%, 100% { transform: scale(1) translateY(0); opacity: 0.7; }
+  50%      { transform: scale(1.3) translateY(-4px); opacity: 1; }
+}
+
+/* Valley fail cutscene */
+
+.valley-cutscene-overlay {
+  position: fixed;
+  inset: 0;
+  background: #000;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: cutscene-fade-in 1.2s ease-out;
+}
+
+@keyframes cutscene-fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.valley-cutscene-inner {
+  max-width: 600px;
+  padding: 3rem 2.5rem;
+  text-align: center;
+}
+
+.valley-cutscene-lines {
+  margin-bottom: 3rem;
+  min-height: 200px;
+}
+
+.valley-cutscene-line {
+  font-size: 0.95em;
+  line-height: 2.2;
+  color: #c4a8d8;
+  margin-bottom: 1.2rem;
+  opacity: 0.9;
+  letter-spacing: 0.03em;
+  animation: cutscene-line-fade 0.8s ease-out;
+}
+
+@keyframes cutscene-line-fade {
+  from { opacity: 0; }
+  to   { opacity: 0.9; }
+}
+
+.valley-cutscene-btn {
+  font-family: inherit;
+  font-size: 0.9em;
+  color: var(--bg-dark);
+  background: var(--valley-violet);
+  border: none;
+  border-radius: 4px;
+  padding: 1rem 2rem;
+  cursor: pointer;
+  transition: opacity 0.8s, box-shadow 0.2s;
+}
+
+.valley-cutscene-btn:hover {
+  box-shadow: 0 0 16px var(--valley-violet);
+}
+
+/* ───────────── DOG-EARED KIN (intro easter egg) ───────────── */
+
+.intro-kin {
+  position: absolute;
+  right: 1rem;
+  bottom: 1rem;
+  width: 56px;
+  height: 64px;
+  pointer-events: none;
+  opacity: 0.55;
+  filter: drop-shadow(0 0 4px rgba(26, 74, 58, 0.4));
+}
+
+.intro-kin-body {
+  position: absolute;
+  left: 50%;
+  bottom: 18%;
+  transform: translateX(-50%);
+  width: 36px;
+  height: 28px;
+  background: #2a4a3a;
+  border-radius: 45% 45% 30% 30%;
+  box-shadow: inset 0 -3px 4px rgba(0, 0, 0, 0.4);
+}
+
+.intro-kin-head {
+  position: absolute;
+  left: 50%;
+  top: 22%;
+  transform: translateX(-50%);
+  width: 22px;
+  height: 22px;
+  background: #3a6a4a;
+  border-radius: 50%;
+  box-shadow: inset 0 -2px 3px rgba(0, 0, 0, 0.3);
+}
+
+.intro-kin-head::before,
+.intro-kin-head::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  width: 2px;
+  height: 2px;
+  border-radius: 50%;
+  background: var(--text-light);
+  opacity: 0.8;
+}
+.intro-kin-head::before { left: 32%; }
+.intro-kin-head::after  { left: 58%; }
+
+.intro-kin-ear {
+  position: absolute;
+  top: 8%;
+  width: 10px;
+  height: 14px;
+  background: #2a4a3a;
+  border-radius: 50% 50% 40% 40%;
+}
+
+.intro-kin-ear-l {
+  left: 28%;
+  transform: rotate(-14deg);
+}
+
+.intro-kin-ear-r {
+  right: 28%;
+  transform: rotate(14deg);
+}
+
+.intro-kin-label {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -2px;
+  font-size: 0.5em;
+  color: var(--text-light);
+  opacity: 0.5;
+  letter-spacing: 0.15em;
+  text-align: center;
+}
+
+/* ───────────── RIDDLE RESPONSIVE ───────────── */
+
+@media (max-width: 700px) {
+  .riddle-stage {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1rem;
+  }
+
+  .riddle-portrait {
+    width: 100%;
+    height: 180px;
+    min-width: 0;
+  }
+
+  .riddle-answers {
+    grid-template-columns: 1fr;
+  }
+
+  .valley-cutscene-line {
+    font-size: 0.8em;
+  }
+}
+
+/* ═════════════════════════════════════════════════════════════ */
+/*  PHASE 8 — POLISH PASS                                         */
+/* ═════════════════════════════════════════════════════════════ */
+
+/* ───────────── SCREEN TRANSITIONS ───────────── */
+
+.screen-enter-fade {
+  animation: scr-fade-in 0.5s ease-out;
+}
+.screen-exit-fade {
+  animation: scr-fade-out 0.3s ease-in forwards;
+}
+.screen-enter-up {
+  animation: scr-slide-up-in 0.4s ease-out;
+}
+.screen-exit-up {
+  animation: scr-fade-out 0.3s ease-in forwards;
+}
+.screen-enter-down {
+  animation: scr-fade-in 0.4s ease-out;
+}
+.screen-exit-down {
+  animation: scr-slide-down-out 0.4s ease-in forwards;
+}
+
+@keyframes scr-fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes scr-fade-out {
+  from { opacity: 1; }
+  to   { opacity: 0; }
+}
+@keyframes scr-slide-up-in {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes scr-slide-down-out {
+  from { opacity: 1; transform: translateY(0); }
+  to   { opacity: 0; transform: translateY(24px); }
+}
+
+/* Screens fading should sit on top of each other during transition */
+.screen.screen-exit-fade,
+.screen.screen-exit-up,
+.screen.screen-exit-down {
+  position: fixed;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+}
+
+/* ───────────── LOADING OVERLAY ───────────── */
+
+.loading-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.85);
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.25s ease-out;
+  pointer-events: none;
+}
+
+.loading-overlay.loading-visible {
+  opacity: 1;
+}
+
+.loading-text {
+  font-size: 0.85em;
+  color: var(--gold);
+  letter-spacing: 0.1em;
+  animation: blink 1.2s step-end infinite;
+}
+
+/* ───────────── BELT FLY-IN ANIMATION ───────────── */
+
+.belt-fly-gem {
+  position: fixed;
+  width: 48px;
+  height: 48px;
+  border-radius: 6px;
+  background: var(--accent, var(--gold));
+  box-shadow:
+    0 0 24px var(--accent, var(--gold)),
+    0 0 48px var(--accent, var(--gold)),
+    inset 0 0 12px rgba(255, 255, 255, 0.3);
+  pointer-events: none;
+  z-index: 200;
+  will-change: transform, opacity;
+  transform: scale(1.5);
+}
+
+.belt-incoming .belt-slot:not(.belt-gem-slot-in) .belt-gem:not(.collected) {
+  opacity: 0.35;
+  transition: opacity 0.3s;
+}
+
+.belt-gem-slot-in .belt-gem {
+  animation: belt-slot-pulse 0.5s ease-out;
+}
+
+@keyframes belt-slot-pulse {
+  0%   { transform: scale(1); }
+  40%  { transform: scale(1.35); }
+  100% { transform: scale(1); }
+}
+
+.belt-slot-ring {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--accent, var(--gold));
+  border-radius: 50%;
+  transform: translate(-50%, -50%) scale(1);
+  opacity: 1;
+  pointer-events: none;
+  animation: belt-ring-expand 0.8s ease-out forwards;
+}
+
+@keyframes belt-ring-expand {
+  from { transform: translate(-50%, -50%) scale(0.6); opacity: 1; }
+  to   { transform: translate(-50%, -50%) scale(4.5); opacity: 0; }
+}
+
+.belt-gem-combo-pulse {
+  animation: belt-combo-pulse 0.8s ease-in-out;
+}
+
+@keyframes belt-combo-pulse {
+  0%, 100% { box-shadow: 0 0 10px var(--accent), 0 0 20px var(--accent); }
+  50%      { box-shadow: 0 0 20px var(--accent), 0 0 40px var(--accent); }
+}
+
+/* Belt container brightens with progress */
+.belt-progress {
+  position: relative;
+  border: 1px solid rgba(245, 200, 66, calc(var(--belt-glow, 0.1)));
+  box-shadow: 0 0 calc(12px * var(--belt-glow, 0.1)) rgba(245, 200, 66, calc(var(--belt-glow, 0.1) * 0.6));
+  transition: border-color 0.6s, box-shadow 0.6s;
+}
+
+/* Individual collected gem slots pulse gently on independent timers */
+.belt-gem.collected {
+  animation: belt-gem-breathe 2.4s ease-in-out infinite;
+  animation-delay: var(--breathe-delay, 0s);
+}
+
+@keyframes belt-gem-breathe {
+  0%, 100% { box-shadow: 0 0 10px var(--accent), 0 0 20px var(--accent); }
+  50%      { box-shadow: 0 0 16px var(--accent), 0 0 32px var(--accent); }
+}
+
+.belt-progress .belt-slot:nth-child(1) .belt-gem { --breathe-delay: 0s; }
+.belt-progress .belt-slot:nth-child(2) .belt-gem { --breathe-delay: 0.35s; }
+.belt-progress .belt-slot:nth-child(3) .belt-gem { --breathe-delay: 0.7s; }
+.belt-progress .belt-slot:nth-child(4) .belt-gem { --breathe-delay: 1.05s; }
+.belt-progress .belt-slot:nth-child(5) .belt-gem { --breathe-delay: 1.4s; }
+.belt-progress .belt-slot:nth-child(6) .belt-gem { --breathe-delay: 1.75s; }
+.belt-progress .belt-slot:nth-child(7) .belt-gem { --breathe-delay: 2.1s; }
+
+/* ───────────── END SCREEN ───────────── */
+
+#screen-end {
+  background: radial-gradient(ellipse at 50% 40%, #1a1208 0%, #000 90%);
+}
+
+.end-content {
+  text-align: center;
+  padding: 2rem;
+  max-width: 720px;
+  width: 100%;
+}
+
+.end-belt {
+  margin: 0 auto 3rem;
+  width: fit-content;
+  padding: 1.6rem 2rem;
+  border: 2px solid var(--gold);
+  border-radius: 8px;
+  background: rgba(10, 8, 4, 0.6);
+  box-shadow: 0 0 32px rgba(245, 200, 66, 0.3), inset 0 0 20px rgba(0, 0, 0, 0.7);
+  animation: end-belt-rotate 8s ease-in-out infinite;
+}
+
+@keyframes end-belt-rotate {
+  0%, 100% { transform: rotateY(-4deg); }
+  50%      { transform: rotateY(4deg); }
+}
+
+.end-belt-slots {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+}
+
+.end-gem {
+  width: 40px;
+  height: 40px;
+  border-radius: 6px;
+  background: var(--accent);
+  box-shadow: 0 0 14px var(--accent), 0 0 28px var(--accent);
+  animation: end-gem-pulse 2.6s ease-in-out infinite;
+  animation-delay: var(--pulse-delay, 0s);
+}
+
+@keyframes end-gem-pulse {
+  0%, 100% {
+    box-shadow: 0 0 12px var(--accent), 0 0 24px var(--accent);
+    transform: scale(1);
+  }
+  50% {
+    box-shadow: 0 0 22px var(--accent), 0 0 44px var(--accent);
+    transform: scale(1.05);
+  }
+}
+
+.end-lines {
+  min-height: 180px;
+  margin-bottom: 2.4rem;
+}
+
+.end-line {
+  font-size: 0.85em;
+  line-height: 2.2;
+  color: var(--text-light);
+  margin-bottom: 1rem;
+  opacity: 0.88;
+  animation: cutscene-line-fade 0.6s ease-out;
+}
+
+.end-line-gold {
+  color: var(--gold);
+  text-shadow: 0 0 12px rgba(245, 200, 66, 0.4);
+  margin-top: 1.2rem;
+}
+
+.end-line-large {
+  font-size: 1.4em;
+  letter-spacing: 0.08em;
+}
+
+.end-line-small {
+  font-size: 0.6em;
+  opacity: 0.6;
+  font-style: italic;
+  margin-top: 1rem;
+}
+
+.end-restart-btn {
+  font-family: inherit;
+  font-size: 0.75em;
+  min-width: 200px;
+  padding: 16px 24px;
+  border: 2px solid var(--gold);
+  background: transparent;
+  color: var(--text-light);
+  cursor: pointer;
+  letter-spacing: 0.08em;
+  transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+  animation: scr-fade-in 0.8s ease-out;
+}
+
+.end-restart-btn:hover {
+  background: rgba(245, 200, 66, 0.15);
+  box-shadow: 0 0 16px rgba(245, 200, 66, 0.4);
+}
+
+.end-restart-btn:active {
+  transform: scale(0.97);
+}
+
+/* ───────────── SETTINGS GEAR ───────────── */
+
+/* Mute button (sits on every screen) */
+.mute-btn {
+  position: fixed;
+  top: 12px;
+  right: 60px;
+  z-index: 45;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.55);
+  border: 1px solid var(--border-dim);
+  border-radius: 8px;
+  color: var(--gold);
+  font-size: 1.1em;
+  cursor: pointer;
+  font-family: inherit;
+  transition: border-color 0.2s, box-shadow 0.2s, transform 0.15s;
+}
+
+.mute-btn:hover {
+  border-color: var(--gold);
+  box-shadow: 0 0 12px rgba(245, 200, 66, 0.3);
+}
+
+.mute-btn:active {
+  transform: scale(0.95);
+}
+
+.mute-btn.muted {
+  color: #aa6666;
+  border-color: rgba(170, 102, 102, 0.4);
+}
+
+@media (max-width: 600px) {
+  .mute-btn {
+    top: 8px;
+    right: 60px;
+  }
+}
+
+.settings-gear {
+  position: fixed;
+  top: 12px;
+  right: 14px;
+  z-index: 40;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.55);
+  border: 1px solid var(--border-dim);
+  border-radius: 8px;
+  color: var(--gold);
+  font-size: 1.2em;
+  cursor: pointer;
+  transition: transform 0.3s, border-color 0.2s, box-shadow 0.2s;
+  font-family: inherit;
+}
+
+.settings-gear:hover {
+  transform: rotate(45deg);
+  border-color: var(--gold);
+  box-shadow: 0 0 12px rgba(245, 200, 66, 0.3);
+}
+
+/* ───────────── SETTINGS PANEL ───────────── */
+
+.settings-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+  z-index: 70;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: scr-fade-in 0.25s ease-out;
+}
+
+.settings-panel {
+  background: #141210;
+  border: 2px solid var(--gold);
+  border-radius: 8px;
+  padding: 2.4rem 2.2rem;
+  max-width: 440px;
+  width: 90%;
+  box-shadow: 0 0 40px rgba(0, 0, 0, 0.8);
+  text-align: center;
+}
+
+.settings-title {
+  font-size: 1.1em;
+  color: var(--gold);
+  letter-spacing: 0.15em;
+  margin-bottom: 2rem;
+}
+
+.settings-row {
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px dashed var(--border-dim);
+  text-align: left;
+}
+
+.settings-row:last-of-type {
+  border-bottom: none;
+  margin-bottom: 1rem;
+}
+
+.settings-row-label {
+  font-size: 0.8em;
+  color: var(--gold);
+  margin-bottom: 0.8rem;
+  letter-spacing: 0.05em;
+}
+
+.settings-row-sub {
+  font-size: 0.55em;
+  color: var(--text-light);
+  opacity: 0.6;
+  line-height: 1.8;
+  margin-top: 0.8rem;
+  font-style: italic;
+}
+
+.settings-row-value {
+  font-size: 0.7em;
+  color: var(--text-light);
+  opacity: 0.8;
+  margin-bottom: 1rem;
+}
+
+.settings-mode {
+  color: var(--gold);
+}
+
+/* Toggle switch */
+.toggle {
+  position: relative;
+  display: inline-block;
+  width: 52px;
+  height: 28px;
+}
+
+.toggle input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.toggle-slider {
+  position: absolute;
+  inset: 0;
+  background: #2a2620;
+  border: 1px solid var(--border-dim);
+  border-radius: 28px;
+  transition: 0.3s;
+  cursor: pointer;
+}
+
+.toggle-slider::before {
+  content: '';
+  position: absolute;
+  height: 20px;
+  width: 20px;
+  left: 3px;
+  bottom: 3px;
+  background: var(--text-light);
+  border-radius: 50%;
+  transition: 0.3s;
+}
+
+.toggle input:checked + .toggle-slider {
+  background: rgba(245, 200, 66, 0.35);
+  border-color: var(--gold);
+}
+
+.toggle input:checked + .toggle-slider::before {
+  background: var(--gold);
+  transform: translateX(22px);
+  box-shadow: 0 0 8px var(--gold);
+}
+
+.settings-btn {
+  font-family: inherit;
+  font-size: 0.65em;
+  min-width: 120px;
+  padding: 10px 18px;
+  border: 2px solid var(--gold);
+  background: transparent;
+  color: var(--text-light);
+  cursor: pointer;
+  letter-spacing: 0.08em;
+  border-radius: 4px;
+  transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+}
+
+.settings-btn:hover {
+  background: rgba(245, 200, 66, 0.15);
+  box-shadow: 0 0 10px rgba(245, 200, 66, 0.3);
+}
+
+.settings-btn:active { transform: scale(0.97); }
+
+.settings-btn-danger {
+  border-color: #aa4444;
+  color: #aa6666;
+}
+
+.settings-btn-danger:hover {
+  background: rgba(170, 68, 68, 0.15);
+  box-shadow: 0 0 10px rgba(170, 68, 68, 0.3);
+}
+
+.settings-close-btn {
+  margin-top: 1rem;
+}
+
+/* Confirm dialog */
+
+.confirm-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.85);
+  z-index: 80;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: scr-fade-in 0.25s ease-out;
+}
+
+.confirm-panel {
+  background: #141210;
+  border: 2px solid #aa4444;
+  border-radius: 8px;
+  padding: 2rem;
+  max-width: 400px;
+  width: 90%;
+  text-align: center;
+}
+
+.confirm-text {
+  font-size: 0.75em;
+  line-height: 2;
+  color: var(--text-light);
+  margin-bottom: 2rem;
+}
+
+.confirm-buttons {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+}
+
+/* ───────────── MAP VISUAL POLISH ───────────── */
+
+#map-container {
+  position: relative;
+}
+
+/* Deltora landmass — stylised island */
+.map-land {
+  clip-path: polygon(
+    14% 4%, 86% 6%, 94% 22%, 90% 48%,
+    96% 66%, 86% 82%, 70% 94%, 48% 96%,
+    28% 90%, 10% 78%, 6% 52%, 10% 30%
+  );
+  background:
+    radial-gradient(ellipse at 30% 40%, rgba(45, 90, 39, 0.15) 0%, transparent 50%),
+    radial-gradient(ellipse at 70% 30%, rgba(26, 58, 92, 0.12) 0%, transparent 40%),
+    radial-gradient(ellipse at 50% 70%, rgba(74, 64, 53, 0.1) 0%, transparent 45%),
+    repeating-linear-gradient(
+      0deg,
+      rgba(232, 213, 163, 0.025) 0px,
+      rgba(232, 213, 163, 0.025) 1px,
+      transparent 1px,
+      transparent 20px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      rgba(232, 213, 163, 0.025) 0px,
+      rgba(232, 213, 163, 0.025) 1px,
+      transparent 1px,
+      transparent 20px
+    ),
+    linear-gradient(160deg, #1a1208 0%, #1a1610 40%, #0f0d08 100%);
+  border: none;
+  box-shadow: none;
+  filter: drop-shadow(0 0 12px rgba(245, 200, 66, 0.12));
+}
+
+/* Sea backdrop */
+#map-container::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 50% 50%, #06121a 0%, #04080f 100%);
+  z-index: -1;
+  pointer-events: none;
+}
+
+.barrier-mountains {
+  position: absolute;
+  top: -4px;
+  left: 8%;
+  right: 8%;
+  display: flex;
+  justify-content: space-between;
+  z-index: 3;
+  pointer-events: none;
+}
+
+.barrier-mountains .peak {
+  color: #3a3528;
+  font-size: 0.8em;
+  opacity: 0.7;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+  line-height: 1;
+}
+
+/* Region marker — tap target, label */
+
+.region-marker {
+  min-width: 44px;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.region-marker .marker-dot {
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+.region-marker.visited .marker-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+  animation: none;
+  background: var(--accent);
+  box-shadow: 0 0 10px var(--accent), 0 0 20px var(--accent);
+}
+
+.region-marker.visited .marker-dot::after {
+  display: none;
+}
+
+.region-marker:hover .marker-dot,
+.region-marker:focus-visible .marker-dot {
+  transform: scale(1.5);
+}
+
+.marker-label {
+  position: absolute;
+  top: calc(100% + 2px);
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  font-size: 0.5em;
+  color: var(--text-light);
+  letter-spacing: 0.1em;
+  opacity: 0;
+  transition: opacity 0.3s, color 0.3s;
+  pointer-events: none;
+}
+
+.region-marker:hover .marker-label,
+.region-marker:focus-visible .marker-label {
+  opacity: 0.9;
+}
+
+.region-marker.visited .marker-label {
+  opacity: 0.8;
+  color: var(--accent);
+}
+
+.region-marker.visited .marker-label::after {
+  content: '  \2713';
+  opacity: 0.7;
+}
+
+/* Replace the old text tooltip (superseded by marker-label) */
+.marker-tooltip {
+  display: none;
+}
+
+/* ───────────── CONSISTENCY — BUTTONS & WIN OVERLAYS ───────────── */
+
+.region-intro-enter,
+.maze-win-btn,
+.maze-catch-btn,
+.sands-death-btn,
+.sands-stone-btn,
+.valley-cutscene-btn {
+  min-width: 200px;
+  padding: 16px 24px;
+  border: 2px solid var(--accent, var(--gold));
+  background: transparent;
+  color: var(--text-light);
+  font-family: inherit;
+  font-size: 0.75em;
+  letter-spacing: 0.08em;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+}
+
+.region-intro-enter:hover,
+.maze-win-btn:hover,
+.maze-catch-btn:hover,
+.sands-death-btn:hover,
+.sands-stone-btn:hover,
+.valley-cutscene-btn:hover {
+  background: color-mix(in srgb, var(--accent, var(--gold)) 20%, transparent);
+  box-shadow: 0 0 16px var(--accent, var(--gold));
+}
+
+.region-intro-enter:active,
+.maze-win-btn:active,
+.maze-catch-btn:active,
+.sands-death-btn:active,
+.sands-stone-btn:active,
+.valley-cutscene-btn:active {
+  transform: scale(0.97);
+}
+
+/* Unify win overlay text sizing */
+.maze-win-title {
+  font-size: 1.4em;
+  color: var(--accent, var(--gold));
+}
+
+.maze-win-text {
+  font-size: 0.7em;
+  line-height: 2;
+}
+
+/* ───────────── MOBILE RESPONSIVENESS ───────────── */
+
+@media (max-width: 600px) {
+  body { overflow-x: hidden; }
+
+  .map-land {
+    aspect-ratio: 1 / 1;
+  }
+
+  .belt-progress {
+    flex-wrap: wrap;
+    gap: 0.6rem 0.4rem;
+  }
+
+  .settings-gear {
+    width: 44px;
+    height: 44px;
+    top: 8px;
+    right: 8px;
+  }
+
+  /* Maze engine: tighter tiles, no scroll */
+  .maze-grid {
+    max-width: 100vw;
+  }
+
+  .maze-ctrl-btn {
+    width: 64px;
+    height: 64px;
+    font-size: 1.6em;
+  }
+
+  .maze-controls {
+    gap: 16px;
+    margin-top: 16px;
+  }
+
+  /* Dialogue / Riddle engines — portrait above text (already handled) */
+  .dialogue-choice,
+  .riddle-answer {
+    width: 100%;
+    min-height: 44px;
+    font-size: 0.68em;
+  }
+
+  /* Memory — scales in existing rules; ensure min tap */
+  .memory-card {
+    min-width: 60px;
+    min-height: 60px;
+  }
+
+  .region-intro-name { font-size: 1.4em; }
+  .region-intro-text { font-size: 0.7em; line-height: 2; }
+  .region-intro-enter { font-size: 0.65em; padding: 14px 20px; }
+}
+
+@media (max-width: 360px) {
+  .memory-grid {
+    grid-template-columns: repeat(2, 1fr);
+    grid-auto-rows: 64px;
+  }
+  .memory-card {
+    width: 100%;
+    height: 64px;
+  }
+}
+
+/* Prevent maze layout from overflowing when tileSize is large */
+@media (max-width: 520px) {
+  .maze-grid {
+    transform-origin: center top;
+  }
+}
+
+/* ═════════════════════════════════════════════════════════════ */
+/*  PHASE 10 — TYPOGRAPHY OVERHAUL (lore font)                    */
+/* ═════════════════════════════════════════════════════════════ */
+
+/* Lore text helpers */
+.lore-text {
+  font-family: var(--font-lore);
+  font-size: var(--text-lore-lg);
+  line-height: var(--lh-lore);
+  color: var(--text-lore);
+}
+
+/* ───────────── REGION INTRO ───────────── */
+
+.region-intro-text {
+  font-family: var(--font-lore);
+  font-size: var(--text-lore-lg);
+  line-height: var(--lh-lore);
+  color: var(--text-lore);
+  max-width: 640px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 24px 0;
+  white-space: pre-line;
+  letter-spacing: 0.01em;
+}
+
+.region-intro-gem {
+  font-family: var(--font-lore);
+  font-style: italic;
+  font-size: var(--text-lore-sm);
+  line-height: var(--lh-lore);
+  color: var(--text-light);
+  opacity: 0.75;
+  max-width: 640px;
+  margin: 24px auto 3rem;
+  border-left: 2px solid var(--accent, var(--gold));
+  padding: 6px 18px;
+  text-align: left;
+}
+
+.region-intro-name {
+  font-family: var(--font-pixel);
+}
+
+/* ───────────── DIALOGUE ENGINE (Lake of Tears) ───────────── */
+
+.dialogue-box {
+  padding: 28px 32px;
+}
+
+.dialogue-speaker {
+  font-family: var(--font-pixel);
+  font-size: var(--text-micro);
+  letter-spacing: 0.08em;
+  margin-bottom: 14px;
+}
+
+.dialogue-text {
+  font-family: var(--font-lore);
+  font-size: var(--text-lore-lg);
+  line-height: var(--lh-lore);
+  color: var(--text-lore);
+}
+
+.dialogue-text.is-narrator {
+  font-family: var(--font-lore);
+  font-style: italic;
+  font-size: var(--text-lore-md);
+  color: var(--text-lore);
+  opacity: 0.82;
+}
+
+.dialogue-choice {
+  font-family: var(--font-lore);
+  font-size: var(--text-lore-sm);
+  line-height: var(--lh-lore);
+  padding: 18px 24px;
+  min-height: 64px;
+  letter-spacing: 0.01em;
+}
+
+.dialogue-hint {
+  font-family: var(--font-lore);
+  font-style: italic;
+  font-size: var(--text-lore-xs);
+  line-height: var(--lh-lore);
+}
+
+/* ───────────── RIDDLE ENGINE ───────────── */
+
+.riddle-box {
+  padding: 32px 36px;
+}
+
+.riddle-speaker {
+  font-family: var(--font-pixel);
+  font-size: var(--text-micro);
+  letter-spacing: 0.08em;
+  margin-bottom: 14px;
+}
+
+.riddle-text {
+  font-family: var(--font-lore);
+  font-size: var(--text-lore-xl);
+  line-height: 1.9;
+  color: var(--text-lore);
+  max-width: 640px;
+  white-space: pre-line;
+}
+
+[data-region="valley"] .riddle-text {
+  font-size: 2.7rem;          /* ≈ 27px */
+  line-height: 2.0;
+}
+
+.riddle-answer {
+  font-family: var(--font-lore);
+  font-size: var(--text-lore-md);
+  line-height: var(--lh-lore);
+  padding: 18px 24px;
+  min-height: 64px;
+  letter-spacing: 0.01em;
+  text-align: center;
+}
+
+.riddle-feedback {
+  font-family: var(--font-lore);
+  font-style: italic;
+  font-size: var(--text-lore-sm);
+  line-height: var(--lh-lore);
+  opacity: 0.9 !important;
+}
+
+.riddle-hint {
+  font-family: var(--font-lore);
+  font-style: italic;
+  font-size: var(--text-lore-xs);
+  line-height: var(--lh-lore);
+}
+
+/* Valley cutscene lines — lore serif */
+.valley-cutscene-line {
+  font-family: var(--font-lore);
+  font-style: italic;
+  font-size: var(--text-lore-lg);
+  line-height: 2.0;
+  letter-spacing: 0.02em;
+}
+
+/* ───────────── MEMORY ENGINE (City of the Rats) ───────────── */
+
+.memory-card-label {
+  font-family: var(--font-pixel);
+  font-size: var(--text-micro);
+}
+
+.memory-feedback {
+  font-family: var(--font-lore);
+  font-style: italic;
+  font-size: var(--text-lore-sm);
+  line-height: var(--lh-lore);
+}
+
+.memory-desc-label {
+  font-family: var(--font-pixel);
+  font-size: var(--text-micro);
+}
+
+.memory-desc-text {
+  font-family: var(--font-lore);
+  font-size: var(--text-lore-sm);
+  line-height: var(--lh-lore);
+}
+
+/* ───────────── MAZE HINTS / EASTER EGG POPUP ───────────── */
+
+.maze-egg-label {
+  font-family: var(--font-pixel);
+  font-size: var(--text-micro);
+}
+
+.maze-egg-text {
+  font-family: var(--font-lore);
+  font-style: italic;
+  font-size: var(--text-lore-sm);
+  line-height: var(--lh-lore);
+  color: var(--text-lore);
+}
+
+/* Native browser tooltip for maze hint tiles uses system font —
+   nothing to restyle. Any future in-grid hint element can adopt
+   .lore-text or the .maze-egg-text rule. */
+
+/* ───────────── SANDS ENGINE (warning stone, death text) ───────────── */
+
+.sands-stone-header {
+  font-family: var(--font-pixel);
+}
+
+.sands-stone-body {
+  font-family: var(--font-lore);
+  font-size: var(--text-lore-md);
+  line-height: var(--lh-lore);
+  color: var(--text-lore);
+  font-style: italic;
+}
+
+.sands-stone-footer {
+  font-family: var(--font-lore);
+  font-style: italic;
+  font-size: var(--text-lore-xs);
+}
+
+.sands-subhud {
+  font-family: var(--font-lore);
+  font-style: italic;
+  font-size: var(--text-lore-xs);
+  letter-spacing: 0.05em;
+}
+
+.sands-death-title {
+  font-family: var(--font-pixel);
+}
+
+.sands-death-text {
+  font-family: var(--font-lore);
+  font-style: italic;
+  font-size: var(--text-lore-sm);
+  line-height: var(--lh-lore);
+}
+
+/* ───────────── WIN / FAIL OVERLAYS ───────────── */
+
+.maze-win-title,
+.riddle-fail-title,
+.maze-catch-title,
+.dialogue-fail-title {
+  font-family: var(--font-pixel);
+}
+
+.maze-win-text,
+.maze-catch-text {
+  font-family: var(--font-lore);
+  font-style: italic;
+  font-size: var(--text-lore-sm);
+  line-height: var(--lh-lore);
+  color: var(--text-lore);
+  opacity: 0.88;
+}
+
+/* ───────────── END SCREEN ───────────── */
+
+.end-line {
+  font-family: var(--font-lore);
+  font-size: var(--text-lore-lg);
+  line-height: 2.0;
+  color: var(--text-lore);
+}
+
+.end-line-gold.end-line-large {
+  /* Spec: punch line stays in pixel font, gold */
+  font-family: var(--font-pixel);
+  font-size: var(--text-heading);
+  letter-spacing: 0.08em;
+  margin-top: 32px;
+}
+
+.end-line-small {
+  font-family: var(--font-lore);
+  font-style: italic;
+  font-size: var(--text-lore-xs);
+  opacity: 0.62;
+}
+
+.end-restart-btn {
+  font-family: var(--font-pixel);
+}
+
+/* ───────────── POPUPS / SETTINGS / LOADING ───────────── */
+
+.loading-text {
+  font-family: var(--font-lore);
+  font-style: italic;
+  font-size: var(--text-lore-md);
+  letter-spacing: 0.04em;
+}
+
+.settings-title,
+.settings-row-label,
+.settings-btn {
+  font-family: var(--font-pixel);
+}
+
+/* Settings overlay is UI chrome — keep pixel font throughout */
+.settings-row-sub,
+.confirm-text {
+  font-family: var(--font-pixel);
+}
+
+/* Region popup is UI chrome — everything inside stays pixel */
+.popup-region-name,
+.popup-gem-name,
+.popup-status {
+  font-family: var(--font-pixel);
+}
+
+/* Marker labels stay pixel (UI chrome) */
+.marker-label {
+  font-family: var(--font-pixel);
+}
+
+/* ───────────── LORE MAX-WIDTH / MOBILE ───────────── */
+
+.dialogue-text,
+.riddle-text,
+.region-intro-text {
+  max-width: 640px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+@media (max-width: 600px) {
+  .region-intro-text,
+  .dialogue-text,
+  .riddle-text,
+  .region-intro-gem {
+    max-width: 100%;
+    padding-left: 16px;
+    padding-right: 16px;
+    font-size: var(--text-lore-md);
+  }
+
+  .riddle-text {
+    font-size: var(--text-lore-lg);
+  }
+
+  [data-region="valley"] .riddle-text {
+    font-size: 2.2rem;
+  }
+
+  .dialogue-choice,
+  .riddle-answer {
+    font-size: var(--text-lore-sm);
+    min-height: 56px;
+    padding: 14px 18px;
+  }
+
+  .dialogue-box,
+  .riddle-box {
+    padding: 20px 22px;
+  }
+}
+
+/* ═════════════════════════════════════════════════════════════ */
+/*  MAP SCREEN POLISH — FINAL OVERRIDES                           */
+/* ═════════════════════════════════════════════════════════════ */
+
+/* ---- 1. Region labels: pixel font, hidden by default ---- */
+
+.marker-label {
+  font-family: var(--font-pixel) !important;
+  font-size: 0.45rem !important;
+  letter-spacing: 0.05em !important;
+  color: var(--text-light);
+  opacity: 0;
+  transition: opacity 0.2s;
+  position: absolute;
+  top: calc(100% + 2px);
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.region-marker:hover .marker-label,
+.region-marker:focus-visible .marker-label {
+  opacity: 1;
+}
+
+.region-marker.visited .marker-label {
+  opacity: 0.7;
+  color: var(--accent);
+}
+
+/* ✓ suffix handled by existing rule */
+
+/* ---- 2. Grid lines barely perceptible ---- */
+
+.map-land::before {
+  background-image:
+    linear-gradient(rgba(180, 140, 60, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(180, 140, 60, 0.04) 1px, transparent 1px) !important;
+  background-size: 40px 40px !important;
+}
+
+/* Remove the repeating-linear-gradient grid that was baked into
+   the landmass gradient stack in Phase 8 */
+.map-land {
+  background:
+    radial-gradient(ellipse at 30% 40%, rgba(45, 90, 39, 0.15) 0%, transparent 50%),
+    radial-gradient(ellipse at 70% 30%, rgba(26, 58, 92, 0.12) 0%, transparent 40%),
+    radial-gradient(ellipse at 50% 70%, rgba(74, 64, 53, 0.1) 0%, transparent 45%),
+    linear-gradient(160deg, #1a1208 0%, #1a1610 40%, #0f0d08 100%);
+  box-shadow:
+    inset 0 0 40px rgba(0, 0, 0, 0.6),
+    inset 0 0 8px rgba(180, 140, 60, 0.08);
+  filter: drop-shadow(0 0 12px rgba(245, 200, 66, 0.08));
+}
+
+/* Sea backdrop override */
+#map-container::before {
+  background: #040810 !important;
+}
+
+/* ---- 3. Region markers — dots ---- */
+
+.region-marker .marker-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow:
+    0 0 8px var(--accent),
+    0 0 16px color-mix(in srgb, var(--accent) 40%, transparent);
+  animation: markerPulse 2.5s ease-in-out infinite;
+  transition: transform 0.15s;
+}
+
+@keyframes markerPulse {
+  0%, 100% { transform: scale(1);   opacity: 0.9; }
+  50%      { transform: scale(1.4); opacity: 1;   }
+}
+
+.region-marker:hover,
+.region-marker:focus-visible {
+  z-index: 10;
+}
+
+.region-marker:hover .marker-dot,
+.region-marker:focus-visible .marker-dot {
+  transform: scale(1.6);
+}
+
+.region-marker.visited .marker-dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 3px;
+  background: var(--accent);
+  box-shadow: 0 0 12px var(--accent);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  animation: none;
+}
+
+.region-marker.visited:hover .marker-dot,
+.region-marker.visited:focus-visible .marker-dot {
+  transform: scale(1.6);
+}
+
+/* Kill the old ✓ glyph inside the dot (label carries the tick) */
+.region-marker.visited .marker-dot::after {
+  display: none !important;
+}
+
+/* ---- 4. Belt slots ---- */
+
+.belt-progress {
+  display: flex;
+  gap: 8px;
+  padding: 12px 20px;
+  background: rgba(0, 0, 0, 0.4);
+  border-bottom: 1px solid rgba(245, 200, 66, 0.15);
+  justify-content: center;
+}
+
+.belt-slot {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.belt-gem {
+  width: 40px;
+  height: 40px;
+  border-radius: 4px;
+  border: 1.5px solid rgba(245, 200, 66, 0.3);
+  background: #0d0d0d;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  transition: border-color 0.4s, background 0.4s, box-shadow 0.4s;
+}
+
+.belt-gem .gem-inner {
+  width: 16px;
+  height: 16px;
+  border-radius: 0;
+  transform: rotate(45deg);
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  transition: background 0.4s, border-color 0.4s, box-shadow 0.4s;
+}
+
+.belt-gem.collected {
+  background: color-mix(in srgb, var(--accent) 15%, #0d0d0d);
+  border-color: color-mix(in srgb, var(--accent) 80%, transparent);
+  box-shadow: 0 0 10px color-mix(in srgb, var(--accent) 50%, transparent);
+}
+
+.belt-gem.collected .gem-inner {
+  background: var(--accent);
+  border-color: var(--accent);
+  box-shadow: 0 0 6px var(--accent);
+}
+
+.belt-gem-label {
+  font-family: var(--font-pixel);
+  font-size: 0.38rem;
+  color: var(--text-light);
+  opacity: 0.5;
+  margin-top: 4px;
+  text-align: center;
+  letter-spacing: 0.05em;
+}
+
+.belt-slot .belt-gem.collected + .belt-gem-label,
+.belt-slot:has(.belt-gem.collected) .belt-gem-label {
+  opacity: 0.8;
+}
+
+/* ---- 5. DELTORA watermark ---- */
+
+.map-land::after {
+  content: 'DELTORA';
+  font-family: var(--font-pixel);
+  font-size: 0.7rem;
+  letter-spacing: 0.3em;
+  color: rgba(245, 200, 66, 0.25);
+  opacity: 1;
+  position: absolute;
+  top: 8%;
+  left: 50%;
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+/* ---- Mobile ---- */
+
+@media (max-width: 600px) {
+  .belt-gem {
+    width: 34px;
+    height: 34px;
+  }
+  .belt-gem .gem-inner {
+    width: 12px;
+    height: 12px;
+  }
+  .belt-gem-label {
+    font-size: 0.34rem;
+  }
+  .belt-progress {
+    gap: 6px;
+    padding: 10px 8px;
+  }
+}
+
+/* ═════════════════════════════════════════════════════════════ */
+/*  MAP FIXES — CENTRE, LABEL VISIBILITY, GRID OPACITY            */
+/* ═════════════════════════════════════════════════════════════ */
+
+/* 1. Centre the landmass horizontally + vertically below the belt */
+
+#map-container {
+  display: flex !important;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: calc(100vh - 90px);
+  padding: 20px;
+  box-sizing: border-box;
+  flex: none;
+}
+
+.map-land {
+  position: relative;
+  width: min(680px, 90vw);
+  height: min(560px, 75vh);
+  max-width: none;
+  aspect-ratio: auto;
+  margin: 0 auto;
+}
+
+/* 2. Region labels — strict visited / unvisited rules */
+
+.marker-label.marker-unvisited {
+  opacity: 0;
+  pointer-events: none;
+  color: var(--text-light);
+  transition: opacity 0.2s;
+}
+
+.region-marker:hover .marker-label.marker-unvisited,
+.region-marker:focus-visible .marker-label.marker-unvisited {
+  opacity: 1;
+}
+
+.marker-label.marker-visited {
+  opacity: 0.75;
+  color: var(--accent);
+  pointer-events: none;
+}
+
+/* 3. Grid opacity reduced to 2.5% */
+
+.map-land::before {
+  background-image:
+    linear-gradient(rgba(180, 140, 60, 0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(180, 140, 60, 0.025) 1px, transparent 1px) !important;
+  background-size: 40px 40px !important;
+}
+
+/* ═════════════════════════════════════════════════════════════ */
+/*  MAP FIXES v2 — CENTRE + LABEL FONT                            */
+/* ═════════════════════════════════════════════════════════════ */
+
+/* 1. Centring — kill any inherited offsets */
+
+#screen-map {
+  display: flex !important;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  min-height: 100vh;
+  padding: 0;
+  margin: 0;
+}
+
+#map-container {
+  flex: 1 !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  width: 100% !important;
+  height: auto !important;
+  padding: 20px !important;
+  margin: 0 !important;
+  box-sizing: border-box;
+  transform: none !important;
+}
+
+.map-land {
+  position: relative !important;
+  width: min(640px, 88vw) !important;
+  height: min(520px, 72vh) !important;
+  max-width: none !important;
+  aspect-ratio: auto !important;
+  margin: 0 !important;
+  left: auto !important;
+  right: auto !important;
+  transform: none !important;
+}
+
+/* 2. Region labels — pixel font, strict visibility */
+
+.marker-label,
+.region-label {
+  font-family: var(--font-pixel), 'Press Start 2P', monospace !important;
+  font-size: 0.42rem !important;
+  letter-spacing: 0.04em !important;
+  line-height: 1.4 !important;
+  font-style: normal !important;
+}
+
+.marker-label.marker-unvisited,
+.region-label.marker-unvisited {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s;
+  color: var(--text-light);
+}
+
+.region-marker:hover .marker-label.marker-unvisited,
+.region-marker:hover .region-label.marker-unvisited,
+.region-marker:focus-visible .marker-label.marker-unvisited,
+.region-marker:focus-visible .region-label.marker-unvisited {
+  opacity: 1;
+}
+
+.marker-label.marker-visited,
+.region-label.marker-visited {
+  opacity: 0.8;
+  color: var(--accent, #f5c842);
+  pointer-events: none;
+}
+
+/* ═════════════════════════════════════════════════════════════ */
+/*  MAP v3 — SIZE UP + HARD FONT OVERRIDE                         */
+/* ═════════════════════════════════════════════════════════════ */
+
+#map-container {
+  flex: 1 !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  width: 100% !important;
+  height: calc(100vh - 90px) !important;
+  overflow: hidden;
+  padding: 12px !important;
+}
+
+.map-land {
+  width: min(860px, 92vw) !important;
+  height: min(680px, 82vh) !important;
+}
+
+/* Hard font override on labels — wins over any cascade */
+.region-label,
+.region-label *,
+.marker-label,
+.marker-label * {
+  font-family: 'Press Start 2P', monospace !important;
+  font-size: 0.42rem !important;
+  letter-spacing: 0.04em !important;
+  font-style: normal !important;
+}
+
+/* ═════════════════════════════════════════════════════════════ */
+/*  MAP v4 — DEFINITIVE CENTRING (id-based, wins over .map-land)  */
+/* ═════════════════════════════════════════════════════════════ */
+
+#screen-map {
+  width: 100% !important;
+  min-height: 100vh !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  box-sizing: border-box !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+/* ═════════════════════════════════════════════════════════════ */
+/*  MAP v5 — NUCLEAR: kill border-radius + every offset           */
+/* ═════════════════════════════════════════════════════════════ */
+
+#screen-map {
+  width: 100vw !important;
+  min-height: 100vh !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+}
+
+#map-container {
+  flex: 1 !important;
+  width: 100vw !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  padding: 20px !important;
+  margin: 0 !important;
+  box-sizing: border-box !important;
+  position: relative !important;
+  left: auto !important;
+  right: auto !important;
+  padding-left: 20px !important;
+  padding-right: 20px !important;
+  transform: none !important;
+  border-radius: 0 !important;
+}
+
+#map-landmass,
+#map-landmass.map-land,
+.map-land {
+  position: relative !important;
+  flex-shrink: 0 !important;
+  width: min(860px, 90vw) !important;
+  height: min(680px, 80vh) !important;
+  max-width: none !important;
+  aspect-ratio: auto !important;
+  margin: 0 !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  left: auto !important;
+  right: auto !important;
+  top: auto !important;
+  bottom: auto !important;
+  inset: auto !important;
+  transform: none !important;
+  border: none !important;
+  border-radius: 0 !important;
+  box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.5) !important;
+  overflow: visible !important;
+
+  clip-path: polygon(
+    8% 4%,   28% 1%,  52% 0%,  74% 2%,
+    90% 6%,  97% 16%, 99% 30%, 98% 46%,
+    96% 60%, 92% 72%, 86% 83%, 76% 91%,
+    62% 97%, 48% 99%, 34% 97%, 20% 91%,
+    10% 82%,  4% 68%,  1% 52%,  2% 36%,
+    4% 20%
+  ) !important;
+}
+
+#map-landmass::before,
+.map-land::before {
+  border-radius: 0 !important;
+}
+
+/* ═════════════════════════════════════════════════════════════ */
+/*  MAP v6 — SVG LANDMASS (replaces clip-path approach)           */
+/* ═════════════════════════════════════════════════════════════ */
+
+#map-wrapper {
+  position: relative;
+  width: min(860px, 90vw);
+  height: min(680px, 80vh);
+  flex-shrink: 0;
+  margin: 0 auto;
+  /* NO border, NO border-radius, NO clip-path, NO background */
+}
+
+#map-svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Region markers sit above the SVG */
+#map-wrapper .region-marker {
+  z-index: 2;
+}
+
+/* Hide old barrier-mountains element if a cached session still
+   has one in the DOM. SVG now provides that visual. */
+.barrier-mountains { display: none !important; }
+
+
