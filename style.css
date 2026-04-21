@@ -4747,6 +4747,62 @@ body {
 }
 
 /* ═════════════════════════════════════════════════════════════ */
+/*  ROTATE-YOUR-DEVICE OVERLAY (mobile portrait only)             */
+/* ═════════════════════════════════════════════════════════════ */
+
+#rotate-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: #0d0d0d;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 40px;
+}
+
+#rotate-icon {
+  font-size: 64px;
+  color: var(--gold);
+  animation: rotateHint 2s ease-in-out infinite;
+  display: inline-block;
+  margin-bottom: 24px;
+  line-height: 1;
+}
+
+@keyframes rotateHint {
+  0%   { transform: rotate(0deg); }
+  40%  { transform: rotate(90deg); }
+  60%  { transform: rotate(90deg); }
+  100% { transform: rotate(90deg) scale(1.1); }
+}
+
+#rotate-title {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 0.8rem;
+  color: var(--gold);
+  margin: 0 0 16px 0;
+  line-height: 1.8;
+  letter-spacing: 0.05em;
+}
+
+#rotate-sub {
+  font-family: 'IM Fell English', serif;
+  font-size: 1.1rem;
+  color: var(--text-light);
+  opacity: 0.7;
+  margin: 0;
+  line-height: 1.6;
+  max-width: 340px;
+}
+
+body.is-portrait #rotate-overlay {
+  display: flex;
+}
+
+/* ═════════════════════════════════════════════════════════════ */
 /*  CANVAS MAZE CONTAINER                                         */
 /* ═════════════════════════════════════════════════════════════ */
 
