@@ -162,19 +162,26 @@ export class MazeEngine {
     const rect = this.canvasBox.getBoundingClientRect();
     if (rect.width === 0 || rect.height === 0) return;
 
+    // Canvas is always square — the smaller of the container's dimensions
+    // (container is sized by CSS flex; we read it at runtime).
+    const size = Math.floor(Math.min(rect.width, rect.height));
     const dpr = window.devicePixelRatio || 1;
-    this.canvas.width = Math.max(1, Math.floor(rect.width * dpr));
-    this.canvas.height = Math.max(1, Math.floor(rect.height * dpr));
+
+    this.canvas.style.width = size + 'px';
+    this.canvas.style.height = size + 'px';
+    this.canvas.width = Math.max(1, Math.floor(size * dpr));
+    this.canvas.height = Math.max(1, Math.floor(size * dpr));
     this.ctx.setTransform(1, 0, 0, 1, 0, 0);
     this.ctx.scale(dpr, dpr);
 
-    const cellW = rect.width / this.cols;
-    const cellH = rect.height / this.rows;
+    // Cell size: fit the square grid inside the square canvas
+    const cellW = size / this.cols;
+    const cellH = size / this.rows;
     this.cellSize = Math.floor(Math.min(cellW, cellH));
-    this.offsetX = (rect.width - this.cellSize * this.cols) / 2;
-    this.offsetY = (rect.height - this.cellSize * this.rows) / 2;
-    this._cssWidth = rect.width;
-    this._cssHeight = rect.height;
+    this.offsetX = (size - this.cellSize * this.cols) / 2;
+    this.offsetY = (size - this.cellSize * this.rows) / 2;
+    this._cssWidth = size;
+    this._cssHeight = size;
   }
 
   // ───────────── Lifecycle ─────────────
