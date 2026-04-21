@@ -4479,7 +4479,9 @@ body {
 
   .belt-gem-label {
     font-size: 0.3rem !important;
-    display: none !important;  /* keep hidden — right-pad carries clearance */
+    display: block !important;
+    opacity: 0.6;
+    margin-top: 2px !important;
   }
 
   .mute-btn {
@@ -4568,6 +4570,59 @@ body {
   .maze-grid,
   .sands-grid {
     zoom: 0.55;
+  }
+}
+
+/* Region intro — anchor content to top on mobile so it doesn't float in
+   a huge void. Also bump text legibility. */
+@media (max-width: 600px) {
+  #screen-region {
+    justify-content: flex-start !important;
+    padding-top: 3.2rem !important;
+    min-height: 100dvh !important;
+  }
+
+  .region-intro-content {
+    padding: 1.2rem !important;
+    max-width: 100% !important;
+  }
+
+  .region-back-btn {
+    position: static !important;
+    display: inline-block;
+    margin-bottom: 1.2rem !important;
+  }
+
+  .region-intro-name {
+    font-size: 1.3em !important;
+    margin-bottom: 1.2rem !important;
+    line-height: 1.4;
+  }
+
+  .region-intro-text {
+    font-size: 0.95em !important;
+    line-height: 1.8 !important;
+    margin-bottom: 1.4rem !important;
+  }
+
+  .region-intro-gem {
+    font-size: 0.85em !important;
+    line-height: 1.6 !important;
+    margin-bottom: 1.6rem !important;
+  }
+
+  .region-intro-enter {
+    font-size: 0.9em !important;
+    padding: 14px 20px !important;
+    width: 100%;
+    max-width: 320px;
+  }
+}
+
+/* Use dynamic viewport on mobile so chrome URL bar doesn't clip content */
+@media (max-width: 600px) {
+  .screen {
+    min-height: 100dvh !important;
   }
 }
 
