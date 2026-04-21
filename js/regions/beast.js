@@ -4,6 +4,12 @@ export const beastConfig = {
   id: 'beast',
   gemName: 'Amethyst',
   accentColour: '#2d1a4a',
+  accentColourHex: '#6a00aa',
+  colours: {
+    wall:       '#1a0a2a',
+    path:       '#151020',
+    background: '#0a0010',
+  },
   playerStart: [1, 1],
   gemPosition: [7, 6],
   tileSize: 40,
