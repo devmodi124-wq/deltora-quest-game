@@ -178,9 +178,38 @@ export class MazeEngine {
       </div>
     `;
     controls.querySelectorAll('.maze-ctrl-btn').forEach(btn => {
-      btn.addEventListener('click', () => this._move(btn.dataset.dir));
+      btn.addEventListener('pointerdown', (e) => {
+        e.preventDefault();
+        this._move(btn.dataset.dir);
+      });
     });
     container.appendChild(controls);
+
+    this._attachSwipe(maze);
+  }
+
+  _attachSwipe(target) {
+    const THRESH = 24;
+    let startX = 0, startY = 0, active = false;
+    target.addEventListener('touchstart', (e) => {
+      if (e.touches.length !== 1) return;
+      active = true;
+      startX = e.touches[0].clientX;
+      startY = e.touches[0].clientY;
+    }, { passive: true });
+    target.addEventListener('touchend', (e) => {
+      if (!active) return;
+      active = false;
+      const t = e.changedTouches[0];
+      const dx = t.clientX - startX;
+      const dy = t.clientY - startY;
+      if (Math.abs(dx) < THRESH && Math.abs(dy) < THRESH) return;
+      if (Math.abs(dx) > Math.abs(dy)) {
+        this._move(dx > 0 ? 'right' : 'left');
+      } else {
+        this._move(dy > 0 ? 'down' : 'up');
+      }
+    }, { passive: true });
   }
 
   // ───────────── Start / Destroy ─────────────

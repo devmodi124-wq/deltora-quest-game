@@ -713,11 +713,17 @@ body {
   justify-content: center;
   transition: border-color 0.15s, background 0.15s;
   -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  user-select: none;
 }
 
 .maze-ctrl-btn:active {
   border-color: var(--gold);
   background: rgba(245, 200, 66, 0.08);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .maze-controls { display: none; }
 }
 
 /* ───────────── BEAST REGION THEME ───────────── */
@@ -4297,4 +4303,175 @@ body {
    has one in the DOM. SVG now provides that visual. */
 .barrier-mountains { display: none !important; }
 
+/* ═════════════════════════════════════════════════════════════ */
+/*  MOBILE ADAPTATION — aspect-locked map, touch-friendly labels, */
+/*  belt label hiding below 480px                                 */
+/* ═════════════════════════════════════════════════════════════ */
+
+#map-wrapper {
+  aspect-ratio: 860 / 680 !important;
+  height: auto !important;
+  max-height: 80vh !important;
+  width: min(860px, 92vw) !important;
+}
+
+/* On touch devices (no hover), surface unvisited labels at reduced
+   opacity so markers are discoverable without hovering. */
+@media (hover: none) {
+  .marker-label.marker-unvisited,
+  .region-label.marker-unvisited {
+    opacity: 0.55 !important;
+  }
+  .marker-tooltip {
+    opacity: 0.55;
+  }
+}
+
+/* Hide verbose belt labels on narrow phones — coloured gems still
+   identify each slot. */
+@media (max-width: 480px) {
+  .belt-gem-label { display: none !important; }
+  .belt-progress {
+    gap: 4px !important;
+    padding: 8px 6px !important;
+  }
+  .belt-gem {
+    width: 30px !important;
+    height: 30px !important;
+  }
+  .belt-gem .gem-inner {
+    width: 10px !important;
+    height: 10px !important;
+  }
+}
+
+/* ═════════════════════════════════════════════════════════════ */
+/*  MOBILE ADAPTATION — typography & touch targets (≤480px)      */
+/* ═════════════════════════════════════════════════════════════ */
+
+@media (max-width: 480px) {
+  /* Region intro */
+  .region-intro-name {
+    font-size: 1.4em !important;
+    margin-bottom: 1.6rem;
+    line-height: 1.4;
+  }
+  .region-intro-text { font-size: 0.78em; line-height: 1.9; }
+  .region-intro-gem { font-size: 0.65em; }
+  .region-intro-content { padding: 1.2rem; }
+
+  /* Mode select */
+  .mode-content { padding: 1.2rem; }
+  .mode-heading { font-size: 1.6em; margin-bottom: 2rem; }
+  .mode-btn { padding: 1.4rem 1rem; margin-bottom: 1.2rem; }
+  .mode-icon { font-size: 1.1em; }
+  .mode-sub { font-size: 0.72em; line-height: 1.7; }
+
+  /* Boot */
+  .boot-title { font-size: 1.4em !important; line-height: 1.4; }
+  .boot-subtitle { font-size: 0.7em !important; }
+
+  /* End screen */
+  .end-belt { padding: 1rem 0.8rem; margin-bottom: 1.6rem; }
+  .end-belt-slots { gap: 0.4rem; flex-wrap: wrap; }
+  .end-gem { width: 30px !important; height: 30px !important; }
+
+  /* Touch target minimums for interactive controls */
+  .dialogue-choice,
+  .riddle-answer,
+  .popup-enter-btn,
+  .region-intro-enter,
+  .mode-btn,
+  .end-restart-btn,
+  .popup-close,
+  .region-back-btn {
+    min-height: 44px;
+  }
+
+  /* Region popup sizing */
+  .region-popup {
+    width: calc(100vw - 2rem) !important;
+    max-width: 360px !important;
+    padding: 1.2rem !important;
+  }
+}
+
+/* Very narrow (≤360px): push further */
+@media (max-width: 360px) {
+  .region-intro-name { font-size: 1.2em !important; }
+  .mode-heading { font-size: 1.3em; }
+  .boot-title { font-size: 1.15em !important; }
+  .belt-progress { padding: 6px 4px !important; gap: 3px !important; }
+  .belt-gem { width: 26px !important; height: 26px !important; }
+}
+
+/* Hover-specific styles shouldn't stick on touch devices */
+@media (hover: none) {
+  .dialogue-choice:hover,
+  .riddle-answer:hover,
+  .mode-btn:hover,
+  .popup-enter-btn:hover,
+  .region-intro-enter:hover {
+    background: inherit;
+    box-shadow: none;
+  }
+}
+
+/* ═════════════════════════════════════════════════════════════ */
+/*  iOS SAFE-AREA INSETS (notch / home indicator)                */
+/* ═════════════════════════════════════════════════════════════ */
+
+.settings-gear {
+  top: max(12px, env(safe-area-inset-top)) !important;
+  right: max(14px, env(safe-area-inset-right)) !important;
+}
+
+.mute-btn {
+  top: max(12px, env(safe-area-inset-top)) !important;
+  right: calc(max(14px, env(safe-area-inset-right)) + 48px) !important;
+}
+
+#screen-boot,
+#screen-mode,
+#screen-region,
+#screen-end {
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+#screen-map {
+  padding-left: env(safe-area-inset-left) !important;
+  padding-right: env(safe-area-inset-right) !important;
+  padding-bottom: env(safe-area-inset-bottom) !important;
+}
+
+/* ═════════════════════════════════════════════════════════════ */
+/*  LANDSCAPE PHONE (short viewport)                              */
+/* ═════════════════════════════════════════════════════════════ */
+
+@media (max-height: 500px) and (orientation: landscape) {
+  .screen { min-height: 100vh; }
+
+  .boot-title { font-size: 1.4em !important; margin-bottom: 0.6rem; }
+  .boot-subtitle { margin-bottom: 1rem; }
+  .belt-slots.boot-belt { margin: 0.6rem 0 !important; }
+  .blink-prompt { margin-top: 0.6rem; }
+
+  .mode-content { padding: 0.8rem; }
+  .mode-heading { font-size: 1.4em; margin-bottom: 1rem; }
+  .mode-btn { padding: 0.8rem 1rem; margin-bottom: 0.6rem; }
+
+  .region-intro-content { padding: 1rem; }
+  .region-intro-name { font-size: 1.4em !important; margin-bottom: 0.8rem; }
+  .region-intro-text { margin-bottom: 0.8rem; }
+  .region-intro-gem { margin-bottom: 1rem; }
+
+  .belt-progress { padding: 4px 6px !important; }
+  #map-container { padding: 6px !important; }
+  #map-wrapper { max-height: 70vh !important; }
+
+  .maze-controls { margin-top: 0.4rem !important; gap: 0.2rem !important; }
+  .maze-ctrl-btn { width: 42px !important; height: 42px !important; font-size: 1.2em !important; }
+}
 
