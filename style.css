@@ -4431,63 +4431,136 @@ body {
   right: calc(max(14px, env(safe-area-inset-right)) + 48px) !important;
 }
 
-/* Phones: move floating controls below the belt so they don't cover gems. */
-@media (max-width: 600px) {
-  #screen-map .settings-gear {
-    top: auto !important;
-    bottom: calc(12px + env(safe-area-inset-bottom)) !important;
-    right: calc(12px + env(safe-area-inset-right)) !important;
-    width: 40px !important;
-    height: 40px !important;
-  }
-  #screen-map .mute-btn {
-    top: auto !important;
-    bottom: calc(12px + env(safe-area-inset-bottom)) !important;
-    right: calc(60px + env(safe-area-inset-right)) !important;
-    width: 40px !important;
-    height: 40px !important;
-  }
-}
+/* ═════════════════════════════════════════════════════════════ */
+/*  MOBILE PATCH PACK — map fills dvh, belt/btn layout,           */
+/*  unvisited labels hidden, dpad fills remaining space           */
+/* ═════════════════════════════════════════════════════════════ */
 
-/* Map screen: align to top on phones so there's no dead space above */
+/* 1. Map screen fills the viewport on mobile (use dvh) */
 @media (max-width: 600px) {
+  #screen-map {
+    height: 100dvh !important;
+    min-height: 100dvh !important;
+    overflow: hidden !important;
+  }
+
   #map-container {
-    align-items: flex-start !important;
-    padding-top: 8px !important;
-    height: auto !important;
-    flex: 0 0 auto !important;
+    height: calc(100dvh - 80px) !important;
+    padding: 8px !important;
+    align-items: center !important;
+    flex: 1 1 auto !important;
   }
+
   #map-wrapper {
-    max-height: calc(100vh - 60px) !important;
+    width: 96vw !important;
+    max-width: 96vw !important;
+    height: calc(100dvh - 96px) !important;
+    max-height: calc(100dvh - 96px) !important;
   }
 }
 
-/* Phones: shrink the maze/sands grid so dpad fits in the viewport.
-   The grid uses inline pixel sizing from JS, so we scale the whole
-   element via transform — player/enemy transforms scale with it. */
+/* 2. Belt + floating buttons, mobile sizing + no overlap */
 @media (max-width: 600px) {
-  .game-container {
-    min-height: 100vh;
-    padding: 0.6rem 0.6rem 1rem !important;
-    gap: 0.4rem !important;
+  #belt-progress {
+    padding: 8px 52px 8px 8px !important;
+    gap: 4px !important;
+    justify-content: center !important;
   }
+
+  .belt-gem {
+    width: 30px !important;
+    height: 30px !important;
+  }
+
+  .belt-gem .gem-inner {
+    width: 10px !important;
+    height: 10px !important;
+  }
+
+  .belt-gem-label {
+    font-size: 0.3rem !important;
+    display: none !important;  /* keep hidden — right-pad carries clearance */
+  }
+
+  .mute-btn {
+    position: fixed !important;
+    top: max(12px, env(safe-area-inset-top)) !important;
+    right: max(12px, env(safe-area-inset-right)) !important;
+    bottom: auto !important;
+    width: 36px !important;
+    height: 36px !important;
+    font-size: 14px !important;
+    z-index: 100 !important;
+  }
+
+  .settings-gear {
+    position: fixed !important;
+    top: max(12px, env(safe-area-inset-top)) !important;
+    right: calc(54px + env(safe-area-inset-right)) !important;
+    bottom: auto !important;
+    width: 36px !important;
+    height: 36px !important;
+    font-size: 14px !important;
+    z-index: 100 !important;
+  }
+}
+
+/* 3. Region labels — only visited show on mobile */
+@media (max-width: 600px) {
+  .marker-label.marker-unvisited,
+  .region-label.marker-unvisited,
+  .marker-tooltip {
+    display: none !important;
+  }
+
+  .marker-label.marker-visited,
+  .region-label.marker-visited {
+    display: block !important;
+    font-size: 0.35rem !important;
+    opacity: 0.85 !important;
+  }
+}
+
+/* 4+5. Maze screen fills dvh; dpad takes remaining vertical space */
+@media (max-width: 600px) {
+  #screen-game {
+    height: 100dvh !important;
+    min-height: 100dvh !important;
+    display: flex !important;
+    flex-direction: column !important;
+    overflow: hidden !important;
+  }
+
+  .game-container {
+    height: 100dvh !important;
+    min-height: 100dvh !important;
+    padding: 8px !important;
+    gap: 0.3rem !important;
+    display: flex !important;
+    flex-direction: column !important;
+    overflow: hidden !important;
+  }
+
   .maze-hud,
   .sands-hud {
-    padding: 0.4rem 0 !important;
-    margin-bottom: 0.2rem !important;
+    flex-shrink: 0 !important;
+    padding: 8px 12px !important;
+    margin-bottom: 0 !important;
   }
+
   .maze-grid,
   .sands-grid {
+    flex-shrink: 0 !important;
     zoom: 0.7;
+    margin: 0 auto !important;
   }
+
+  .dpad-container,
   .maze-controls {
-    margin-top: 0.4rem !important;
-    gap: 0.3rem !important;
-  }
-  .maze-ctrl-btn {
-    width: 48px !important;
-    height: 48px !important;
-    font-size: 1.3em !important;
+    flex: 1 1 auto !important;
+    justify-content: flex-start !important;
+    padding-top: 12px !important;
+    margin-top: 0 !important;
   }
 }
 
@@ -4496,6 +4569,45 @@ body {
   .sands-grid {
     zoom: 0.55;
   }
+}
+
+/* D-pad styling (applies everywhere but only shown on coarse pointers
+   via existing `.maze-controls` hover-media rule higher up) */
+.dpad-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 16px 0 8px 0;
+}
+
+.dpad-row {
+  display: flex;
+  gap: 6px;
+}
+
+.dpad-btn {
+  width: 64px;
+  height: 64px;
+  font-size: 22px;
+  background: rgba(245, 200, 66, 0.08);
+  border: 1.5px solid rgba(245, 200, 66, 0.35);
+  border-radius: 8px;
+  color: var(--text-light);
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  -webkit-tap-highlight-color: transparent;
+  transition: background 0.1s, transform 0.08s;
+}
+
+.dpad-btn:active {
+  background: rgba(245, 200, 66, 0.2);
+  transform: scale(0.94);
 }
 
 #screen-boot,

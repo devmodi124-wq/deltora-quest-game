@@ -164,24 +164,25 @@ export class MazeEngine {
     container.appendChild(maze);
     this._updatePlayerVisual();
 
-    // Mobile controls
+    // Mobile controls — directional arrow dpad
     const controls = document.createElement('div');
-    controls.className = 'maze-controls';
+    controls.className = 'maze-controls dpad-container';
     controls.innerHTML = `
-      <div class="maze-ctrl-row">
-        <button class="maze-ctrl-btn" data-dir="up">W</button>
+      <div class="maze-ctrl-row dpad-row">
+        <button class="maze-ctrl-btn dpad-btn" data-dir="up" aria-label="Up">↑</button>
       </div>
-      <div class="maze-ctrl-row">
-        <button class="maze-ctrl-btn" data-dir="left">A</button>
-        <button class="maze-ctrl-btn" data-dir="down">S</button>
-        <button class="maze-ctrl-btn" data-dir="right">D</button>
+      <div class="maze-ctrl-row dpad-row">
+        <button class="maze-ctrl-btn dpad-btn" data-dir="left" aria-label="Left">←</button>
+        <button class="maze-ctrl-btn dpad-btn" data-dir="down" aria-label="Down">↓</button>
+        <button class="maze-ctrl-btn dpad-btn" data-dir="right" aria-label="Right">→</button>
       </div>
     `;
-    controls.querySelectorAll('.maze-ctrl-btn').forEach(btn => {
-      btn.addEventListener('pointerdown', (e) => {
+    controls.querySelectorAll('.dpad-btn').forEach(btn => {
+      btn.addEventListener('touchstart', (e) => {
         e.preventDefault();
         this._move(btn.dataset.dir);
-      });
+      }, { passive: false });
+      btn.addEventListener('click', () => this._move(btn.dataset.dir));
     });
     container.appendChild(controls);
 
