@@ -4431,6 +4431,73 @@ body {
   right: calc(max(14px, env(safe-area-inset-right)) + 48px) !important;
 }
 
+/* Phones: move floating controls below the belt so they don't cover gems. */
+@media (max-width: 600px) {
+  #screen-map .settings-gear {
+    top: auto !important;
+    bottom: calc(12px + env(safe-area-inset-bottom)) !important;
+    right: calc(12px + env(safe-area-inset-right)) !important;
+    width: 40px !important;
+    height: 40px !important;
+  }
+  #screen-map .mute-btn {
+    top: auto !important;
+    bottom: calc(12px + env(safe-area-inset-bottom)) !important;
+    right: calc(60px + env(safe-area-inset-right)) !important;
+    width: 40px !important;
+    height: 40px !important;
+  }
+}
+
+/* Map screen: align to top on phones so there's no dead space above */
+@media (max-width: 600px) {
+  #map-container {
+    align-items: flex-start !important;
+    padding-top: 8px !important;
+    height: auto !important;
+    flex: 0 0 auto !important;
+  }
+  #map-wrapper {
+    max-height: calc(100vh - 60px) !important;
+  }
+}
+
+/* Phones: shrink the maze/sands grid so dpad fits in the viewport.
+   The grid uses inline pixel sizing from JS, so we scale the whole
+   element via transform — player/enemy transforms scale with it. */
+@media (max-width: 600px) {
+  .game-container {
+    min-height: 100vh;
+    padding: 0.6rem 0.6rem 1rem !important;
+    gap: 0.4rem !important;
+  }
+  .maze-hud,
+  .sands-hud {
+    padding: 0.4rem 0 !important;
+    margin-bottom: 0.2rem !important;
+  }
+  .maze-grid,
+  .sands-grid {
+    zoom: 0.7;
+  }
+  .maze-controls {
+    margin-top: 0.4rem !important;
+    gap: 0.3rem !important;
+  }
+  .maze-ctrl-btn {
+    width: 48px !important;
+    height: 48px !important;
+    font-size: 1.3em !important;
+  }
+}
+
+@media (max-width: 380px) {
+  .maze-grid,
+  .sands-grid {
+    zoom: 0.55;
+  }
+}
+
 #screen-boot,
 #screen-mode,
 #screen-region,
