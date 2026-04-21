@@ -4665,6 +4665,56 @@ body {
   transform: scale(0.94);
 }
 
+/* ═════════════════════════════════════════════════════════════ */
+/*  CANVAS MAZE CONTAINER                                         */
+/* ═════════════════════════════════════════════════════════════ */
+
+.maze-canvas-container {
+  width: min(560px, 96vw);
+  height: min(560px, 96vw);
+  margin: 0 auto;
+  position: relative;
+  border: 2px solid var(--border-dim);
+  border-radius: 4px;
+  overflow: hidden;
+  background: #0a0604;
+  flex-shrink: 0;
+}
+
+.maze-canvas-container canvas {
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
+
+/* Beast vignette still overlays the canvas */
+.maze-canvas-container .maze-vignette {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse at center,
+    transparent 35%,
+    rgba(0, 0, 0, 0.6) 85%,
+    rgba(0, 0, 0, 0.85) 100%
+  );
+}
+
+@media (max-width: 600px) {
+  .maze-canvas-container {
+    width: 96vw;
+    height: 96vw;
+    max-height: calc(100dvh - 200px);
+    max-width: calc(100dvh - 200px);
+  }
+}
+
+@media (max-width: 380px) {
+  .maze-canvas-container {
+    max-height: calc(100dvh - 220px);
+    max-width: calc(100dvh - 220px);
+  }
+}
+
 #screen-boot,
 #screen-mode,
 #screen-region,

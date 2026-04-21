@@ -4,6 +4,12 @@ export const forestsConfig = {
   id: 'forests',
   gemName: 'Topaz',
   accentColour: '#2d5a27',
+  accentColourHex: '#2d5a27',
+  colours: {
+    wall:       '#0a1a0a',
+    path:       '#141f14',
+    background: '#060e06',
+  },
   playerStart: [1, 1],
   gemPosition: [7, 6],
   tileSize: 40,
