@@ -649,4 +649,21 @@ window.__deltora = {
   clearAllProgress,
 };
 
+// ───────────── Orientation Overlay ─────────────
+// Mobile portrait shows a "rotate your device" overlay; desktop and
+// mobile landscape are unaffected.
+
+function checkOrientation() {
+  const isPortrait = window.innerHeight > window.innerWidth;
+  const isMobile = window.innerWidth <= 900 || 'ontouchstart' in window;
+  document.body.classList.toggle('is-portrait', isPortrait && isMobile);
+}
+
+checkOrientation();
+window.addEventListener('resize', checkOrientation);
+window.addEventListener('orientationchange', () => {
+  // Some browsers fire before dimensions have settled
+  setTimeout(checkOrientation, 100);
+});
+
 init();

@@ -4432,36 +4432,37 @@ body {
 }
 
 /* ═════════════════════════════════════════════════════════════ */
-/*  MOBILE PATCH PACK — map fills dvh, belt/btn layout,           */
-/*  unvisited labels hidden, dpad fills remaining space           */
+/*  MOBILE PROPORTIONAL LAYOUT                                    */
+/*  Every screen fills exactly 100dvh using flex ratios — no      */
+/*  hardcoded pixel heights, no calc(100dvh - Npx). Scales from   */
+/*  320×600 to 430×950 without touching a rule.                   */
 /* ═════════════════════════════════════════════════════════════ */
 
-/* 1. Map screen fills the viewport on mobile (use dvh) */
 @media (max-width: 600px) {
-  #screen-map {
+  /* Root: lock to viewport, no body scroll */
+  html, body {
+    height: 100dvh !important;
+    overflow: hidden !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  /* Every screen is a flex column that fills exactly 100dvh */
+  .screen {
     height: 100dvh !important;
     min-height: 100dvh !important;
+    max-height: 100dvh !important;
+    width: 100% !important;
+    display: flex !important;
+    flex-direction: column !important;
     overflow: hidden !important;
+    justify-content: flex-start !important;
+    align-items: stretch !important;
   }
 
-  #map-container {
-    height: calc(100dvh - 80px) !important;
-    padding: 8px !important;
-    align-items: center !important;
-    flex: 1 1 auto !important;
-  }
-
-  #map-wrapper {
-    width: 96vw !important;
-    max-width: 96vw !important;
-    height: calc(100dvh - 96px) !important;
-    max-height: calc(100dvh - 96px) !important;
-  }
-}
-
-/* 2. Belt + floating buttons, mobile sizing + no overlap */
-@media (max-width: 600px) {
+  /* ───── MAP SCREEN ───── */
   #belt-progress {
+    flex: 0 0 auto !important;
     padding: 8px 52px 8px 8px !important;
     gap: 4px !important;
     justify-content: center !important;
@@ -4484,6 +4485,40 @@ body {
     margin-top: 2px !important;
   }
 
+  #map-container {
+    flex: 1 1 0 !important;
+    min-height: 0 !important;
+    height: auto !important;
+    width: 100% !important;
+    padding: 8px !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+  }
+
+  #map-wrapper {
+    width: 100% !important;
+    height: 100% !important;
+    max-width: min(100%, calc(100dvh * 0.85)) !important;
+    max-height: min(100%, calc(100vw * 1.1)) !important;
+    aspect-ratio: auto !important;
+  }
+
+  /* Map markers on mobile: only visited regions label themselves */
+  .marker-label.marker-unvisited,
+  .region-label.marker-unvisited,
+  .marker-tooltip {
+    display: none !important;
+  }
+
+  .marker-label.marker-visited,
+  .region-label.marker-visited {
+    display: block !important;
+    font-size: 0.35rem !important;
+    opacity: 0.85 !important;
+  }
+
+  /* Floating corner buttons sit above the belt */
   .mute-btn {
     position: fixed !important;
     top: max(12px, env(safe-area-inset-top)) !important;
@@ -4505,39 +4540,19 @@ body {
     font-size: 14px !important;
     z-index: 100 !important;
   }
-}
 
-/* 3. Region labels — only visited show on mobile */
-@media (max-width: 600px) {
-  .marker-label.marker-unvisited,
-  .region-label.marker-unvisited,
-  .marker-tooltip {
-    display: none !important;
-  }
-
-  .marker-label.marker-visited,
-  .region-label.marker-visited {
-    display: block !important;
-    font-size: 0.35rem !important;
-    opacity: 0.85 !important;
-  }
-}
-
-/* 4+5. Maze screen fills dvh; dpad takes remaining vertical space */
-@media (max-width: 600px) {
+  /* ───── GAME SCREEN (shared between maze & sands) ───── */
   #screen-game {
-    height: 100dvh !important;
-    min-height: 100dvh !important;
-    display: flex !important;
-    flex-direction: column !important;
-    overflow: hidden !important;
+    padding: 0 !important;
   }
 
   .game-container {
-    height: 100dvh !important;
-    min-height: 100dvh !important;
-    padding: 8px !important;
-    gap: 0.3rem !important;
+    flex: 1 1 0 !important;
+    min-height: 0 !important;
+    height: 100% !important;
+    width: 100% !important;
+    padding: 0 !important;
+    gap: 0 !important;
     display: flex !important;
     flex-direction: column !important;
     overflow: hidden !important;
@@ -4545,84 +4560,150 @@ body {
 
   .maze-hud,
   .sands-hud {
-    flex-shrink: 0 !important;
+    flex: 0 0 auto !important;
     padding: 8px 12px !important;
-    margin-bottom: 0 !important;
+    margin: 0 !important;
+    width: 100% !important;
   }
 
-  .maze-grid,
-  .sands-grid {
-    flex-shrink: 0 !important;
-    zoom: 0.7;
+  /* MAZE canvas container: 58% of screen height, centers its square canvas */
+  .maze-canvas-container {
+    flex: 0 0 58% !important;
+    min-height: 0 !important;
+    width: 100% !important;
+    height: auto !important;
+    max-width: none !important;
+    max-height: none !important;
+    margin: 0 !important;
+    padding: 4px !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    border: none !important;
+    background: transparent !important;
+    overflow: visible !important;
+  }
+
+  .maze-canvas-container canvas {
+    border: 2px solid var(--border-dim);
+    border-radius: 4px;
+    background: #0a0604;
+  }
+
+  /* SANDS grid: same 58% slice; existing inline px grid stays visually
+     bounded via scale-to-fit. Center-positioning inside the slice. */
+  [data-region="sands"] .sands-grid {
+    flex: 0 0 58% !important;
+    min-height: 0 !important;
+    width: 100% !important;
+    height: auto !important;
     margin: 0 auto !important;
+    justify-self: center !important;
+    zoom: 0.7;
   }
 
+  /* D-pad fills remaining vertical space below the canvas */
   .dpad-container,
   .maze-controls {
-    flex: 1 1 auto !important;
-    justify-content: flex-start !important;
-    padding-top: 12px !important;
-    margin-top: 0 !important;
+    flex: 1 1 0 !important;
+    min-height: 0 !important;
+    margin: 0 !important;
+    padding: 8px 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    align-items: center !important;
+    gap: 6px !important;
   }
-}
 
-@media (max-width: 380px) {
-  .maze-grid,
-  .sands-grid {
-    zoom: 0.55;
+  .dpad-btn,
+  .maze-ctrl-btn {
+    width: clamp(48px, 15vw, 72px) !important;
+    height: clamp(48px, 15vw, 72px) !important;
+    font-size: clamp(18px, 5vw, 26px) !important;
   }
-}
 
-/* Region intro — anchor content to top on mobile so it doesn't float in
-   a huge void. Also bump text legibility. */
-@media (max-width: 600px) {
+  /* ───── REGION INTRO ───── */
   #screen-region {
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch;
+    padding: 20px 16px 32px !important;
     justify-content: flex-start !important;
-    padding-top: 3.2rem !important;
-    min-height: 100dvh !important;
+    align-items: center !important;
   }
 
   .region-intro-content {
-    padding: 1.2rem !important;
+    padding: 0 !important;
     max-width: 100% !important;
+    width: 100% !important;
+    display: flex !important;
+    flex-direction: column !important;
+    min-height: 100%;
   }
 
   .region-back-btn {
     position: static !important;
     display: inline-block;
-    margin-bottom: 1.2rem !important;
+    align-self: flex-start;
+    margin-bottom: 1rem !important;
   }
 
   .region-intro-name {
-    font-size: 1.3em !important;
-    margin-bottom: 1.2rem !important;
+    font-size: clamp(1.1em, 5vw, 1.6em) !important;
+    margin-bottom: 1rem !important;
     line-height: 1.4;
   }
 
   .region-intro-text {
-    font-size: 0.95em !important;
+    font-size: clamp(0.85em, 3.8vw, 1em) !important;
     line-height: 1.8 !important;
-    margin-bottom: 1.4rem !important;
+    margin-bottom: 1.2rem !important;
   }
 
   .region-intro-gem {
-    font-size: 0.85em !important;
+    font-size: clamp(0.75em, 3.4vw, 0.9em) !important;
     line-height: 1.6 !important;
-    margin-bottom: 1.6rem !important;
+    margin-bottom: 1.4rem !important;
   }
 
   .region-intro-enter {
-    font-size: 0.9em !important;
-    padding: 14px 20px !important;
+    margin-top: auto !important;
+    margin-bottom: 0 !important;
+    font-size: clamp(0.85em, 4vw, 1em) !important;
+    padding: clamp(12px, 3.5vw, 18px) clamp(16px, 5vw, 28px) !important;
     width: 100%;
     max-width: 320px;
+    align-self: center;
   }
-}
 
-/* Use dynamic viewport on mobile so chrome URL bar doesn't clip content */
-@media (max-width: 600px) {
-  .screen {
-    min-height: 100dvh !important;
+  /* ───── NARRATIVE ENGINE SCREENS (dialogue / riddle / memory) ───── */
+  [data-region="lake"].game-container,
+  [data-region="dread"].game-container,
+  [data-region="valley"].game-container,
+  [data-region="rats"].game-container {
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch;
+    padding: 12px !important;
+    gap: 0.6rem !important;
+  }
+
+  /* Scale memory/dialogue/riddle cards proportionally so they breathe */
+  .memory-grid {
+    width: 100% !important;
+    max-width: 100vw !important;
+    box-sizing: border-box !important;
+  }
+
+  .dialogue-stage,
+  .riddle-stage {
+    padding: 0.8rem !important;
+  }
+
+  .dialogue-portrait,
+  .riddle-portrait {
+    width: 100% !important;
+    min-width: 0 !important;
+    height: clamp(120px, 30vh, 200px) !important;
   }
 }
 
@@ -4664,6 +4745,99 @@ body {
   background: rgba(245, 200, 66, 0.2);
   transform: scale(0.94);
 }
+
+/* ═════════════════════════════════════════════════════════════ */
+/*  ROTATE-YOUR-DEVICE OVERLAY (mobile portrait only)             */
+/* ═════════════════════════════════════════════════════════════ */
+
+#rotate-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: #0d0d0d;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 40px;
+}
+
+#rotate-icon {
+  font-size: 64px;
+  color: var(--gold);
+  animation: rotateHint 2s ease-in-out infinite;
+  display: inline-block;
+  margin-bottom: 24px;
+  line-height: 1;
+}
+
+@keyframes rotateHint {
+  0%   { transform: rotate(0deg); }
+  40%  { transform: rotate(90deg); }
+  60%  { transform: rotate(90deg); }
+  100% { transform: rotate(90deg) scale(1.1); }
+}
+
+#rotate-title {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 0.8rem;
+  color: var(--gold);
+  margin: 0 0 16px 0;
+  line-height: 1.8;
+  letter-spacing: 0.05em;
+}
+
+#rotate-sub {
+  font-family: 'IM Fell English', serif;
+  font-size: 1.1rem;
+  color: var(--text-light);
+  opacity: 0.7;
+  margin: 0;
+  line-height: 1.6;
+  max-width: 340px;
+}
+
+body.is-portrait #rotate-overlay {
+  display: flex;
+}
+
+/* ═════════════════════════════════════════════════════════════ */
+/*  CANVAS MAZE CONTAINER                                         */
+/* ═════════════════════════════════════════════════════════════ */
+
+.maze-canvas-container {
+  width: min(560px, 96vw);
+  height: min(560px, 96vw);
+  margin: 0 auto;
+  position: relative;
+  border: 2px solid var(--border-dim);
+  border-radius: 4px;
+  overflow: hidden;
+  background: #0a0604;
+  flex-shrink: 0;
+}
+
+.maze-canvas-container canvas {
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
+
+/* Beast vignette still overlays the canvas */
+.maze-canvas-container .maze-vignette {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse at center,
+    transparent 35%,
+    rgba(0, 0, 0, 0.6) 85%,
+    rgba(0, 0, 0, 0.85) 100%
+  );
+}
+
+/* Mobile sizing of .maze-canvas-container is handled by the
+   proportional-flex block higher up (flex: 0 0 58% of screen). */
 
 #screen-boot,
 #screen-mode,
